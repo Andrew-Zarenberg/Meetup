@@ -4,15 +4,16 @@
 	<head>
 	
 		<title>Groups</title>
-		<!-- Include header -->
+		<?php include("header.php"); ?>
 		
 	</head>
 	<body>
 		<!-- Include body header -->
+		<?php include("body_header.php"); ?>
 		
 		<?php print_errors($errors); ?>
 		
-		<table>
+		<table cellspacing="0">
 			<tr>
 				<th>Name</th>
 				<th>Interest</th>
@@ -37,5 +38,6 @@
 		</table>
 		
 		<!-- Include body footer -->
+		<?php include("body_footer.php"); ?>
 	</body>
 </html>
