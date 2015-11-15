@@ -1,8 +1,6 @@
 <?php include("include.php"); ?>
 
 <?php
-	// use to display errors later on
-	$errors = array();
 
 	if(isset($_POST["username"])){
 	
@@ -35,7 +33,13 @@
 				$stmt->bind_param("ssssi", $_POST["username"], md5($_POST["password1"]), $_POST["firstName"], $_POST["lastName"], $zipcode);
 				$stmt->execute();
 				$stmt->close();
-				header("Location: index.php");
+				
+				// Log the new user in
+				$_SESSION["username"] = $_POST["username"];
+				$_SESSION["REMOTE_ADDR"] = $_SERVER["REMOTE_ADDR"];
+				
+				// Redirect
+				header("Location: index.php?newuser=1");
 			}
 		}
 				
@@ -53,11 +57,7 @@
 		<!-- Include body header -->
 		
 		<?php
-			if(!empty($errors)){
-				foreach($errors as $er){
-					echo "<div>" . $er . "</div>";
-				}
-			}
+			print_errors($errors);
 		?>
 	
 		<form action="register.php" method="post">

@@ -10,6 +10,8 @@
 	<body>
 		<!-- Include body header -->
 		
+		<?php print_errors($errors); ?>
+		
 		<!-- Include body footer -->
 	</body>
 </html>
