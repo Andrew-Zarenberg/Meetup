@@ -60,7 +60,7 @@
 	<body>
 		<?php include("body_header.php"); ?>
 		
-		<?php print_errors($errors); ?>
+		<?php print_errors($error, $success); ?>
 	
 		<form action="register.php" method="post">
 			<table cellspacing="0">

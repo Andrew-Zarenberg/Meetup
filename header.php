@@ -7,6 +7,16 @@ body {
 	margin:0;
 }
 
+a {
+	color:#105289;
+	text-decoration:none;
+}
+
+a:hover {
+	color:#D31141;
+	text-decoration:underline;
+}
+
 table {
 	border: 2px solid black;
 	width:100%;
@@ -30,8 +40,12 @@ td {
 	text-align:center;
 }
 
-td.group_interest, td.group_creator {
+td.group_creator {
 	text-align:center;
+}
+
+td.group_interest {
+	padding-left:15px;
 }
 
 th.table_header {
@@ -56,6 +70,7 @@ th.table_header {
 #title {
 	font-size:50px;
 	text-align:center;
+	margin-bottom:20px;
 }
 
 #main_box {
@@ -95,6 +110,23 @@ div.error_head {
 
 div.success, div.error {
 	margin-bottom:10px;
+}
+
+table.separation, table.separation td, table.separation.th {
+	border:0;
+	vertical-align:top;
+}
+
+div.authorized span {
+	font-style:italic;
+}
+
+div.authorized a {
+	font-weight:bold;;
+}
+
+table.box, table.box td, table.box th {
+	vertical-align:top;
 }
 </style>
 

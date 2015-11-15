@@ -33,6 +33,7 @@ function print_errors($ers, $ses){
 		foreach($ses as $se){
 			echo "<div>".$se."</div>";
 		}
+		echo "</div>";
 	}
 }
 ?>

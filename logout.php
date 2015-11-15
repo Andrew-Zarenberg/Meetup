@@ -1,5 +1,5 @@
 <?php
 	session_start();
 	session_destroy();
-	header("Location: index.php?loggedout=true");
+	header("Location: index.php?loggedout=1");
 ?>
