@@ -191,7 +191,9 @@
 		} else $invalid = 1;
 	} else $invalid = 1;
 	
-	if($invalid == 1){ ?>
+	if($invalid == 1){ 
+		$actions = '<div class="actions"><a href="groups.php">Back to List of Groups</a></div>';
+	?>
 	
 
 <html>
