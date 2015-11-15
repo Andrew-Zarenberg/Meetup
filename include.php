@@ -1,5 +1,7 @@
 <?php
 
+$EVENT_DATE_FORMAT = "l n/j/Y g:i A";
+
 $mysqli = new mysqli("localhost", "root", "", "meetup");
 
 if(mysqli_connect_errno()){

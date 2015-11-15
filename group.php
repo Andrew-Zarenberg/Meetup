@@ -141,6 +141,34 @@
 						
 				</tr>
 			</table>
+			<br />
+			<table cellspacing="0" class="box">
+				<tr>
+					<th class="table_header" colspan="4">Upcoming Events</th>
+				</tr>
+				
+				<tr>
+					<th>Name</th>
+					<th>Start Time</th>
+					<th>End Time</th>
+					<th>Location</th>
+				</tr>
+				
+				<?php
+					if($stmt = $mysqli->prepare("SELECT event.event_id, event.title, event.description, event.start_time, event.end_time, location.lname, location.description, location.street, location.city, location.zip FROM event, location WHERE event.lname=location.lname AND event.zip=location.zip AND event.group_id=? ORDER BY event.start_time")){
+						$stmt->bind_param("i",$group_id);
+						$stmt->execute();
+						$stmt->bind_result($event_id, $event_title, $event_description, $event_start, $event_end, $location_name, $location_description, $location_street, $location_city, $location_zipcode);
+						
+						while($stmt->fetch()){
+							echo '<tr><td><div><a href="event.php?id='.$event_id.'">'.$event_title.'</a></div>'.$event_description.'</td>';
+							echo '<td>'.(new Datetime($event_start))->format($EVENT_DATE_FORMAT).'</td>';
+							echo '<td>'.(new Datetime($event_end))->format($EVENT_DATE_FORMAT).'</td>';
+							echo '<td><div><a href="location.php?name='.$location_name.'&zipcode='.$location_zipcode.'">'.$location_name.'</a></div><div>'.$location_street.' '.$location_zipcode.', '.$location_city.'</div></td></tr>';
+						}
+					}
+				?>
+			</table>
 		</div>
 		
 		
