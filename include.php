@@ -16,14 +16,23 @@ if(isset($SESSION["REMOTE_ADDR"]) && $SESSION["REMOTE_ADDR"] != $SERVER["REMOTE_
 
 
 // Used to add error messages and display on pages
-$errors = array();
+$error = array();
+$success = array();
 
-function print_errors($ers){
-	if(empty($ers)) return;
-	echo '<div class="error"><div class="errorHeader">ERROR:</div>';
-	foreach($ers as $er){
-		echo "<div>" . $er . "</div>";
+function print_errors($ers, $ses){
+	if(!empty($ers)){
+		echo '<div class="error"><div class="error_head">ERROR:</div>';
+		foreach($ers as $er){
+			echo "<div>" . $er . "</div>";
+		}
+		echo "</div>";
 	}
-	echo "</div>";
+	
+	if(!empty($ses)){
+		echo '<div class="success"><div class="success_head">SUCCESS:</div>';
+		foreach($ses as $se){
+			echo "<div>".$se."</div>";
+		}
+	}
 }
 ?>

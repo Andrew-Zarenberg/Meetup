@@ -1,6 +1,10 @@
 <?php include("include.php"); ?>
 
 <?php
+	if(isset($_SESSION["username"])){
+		// If already logged in cannot register
+		header("Location: index.php?attemptregister=true");
+	}
 
 	if(isset($_POST["username"])){
 	
@@ -50,18 +54,16 @@
 	<head>
 	
 		<title>Register</title>
-		<!-- Include header -->
+		<?php include("header.php"); ?>
 		
 	</head>
 	<body>
-		<!-- Include body header -->
+		<?php include("body_header.php"); ?>
 		
-		<?php
-			print_errors($errors);
-		?>
+		<?php print_errors($errors); ?>
 	
 		<form action="register.php" method="post">
-			<table>
+			<table cellspacing="0">
 				<tr>
 					<th>Username</th>
 					<td><input name="username" value="<?php if(isset($_POST["username"])) echo $_POST["username"]; ?>" /></td>
@@ -100,6 +102,6 @@
 			</table>
 		</form>
 		
-		<!-- Include body footer -->
+		<?php include("body_footer.php"); ?>
 	</body>
 </html>

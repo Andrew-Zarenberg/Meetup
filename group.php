@@ -1,38 +1,69 @@
 <?php include("include.php"); ?>
 
+<?php
+	$invalid = 0;
+	if(isset($_GET["id"])){
+		$group_id = intval($_GET["id"]);
+		
+		if($stmt = $mysqli->prepare("SELECT g.group_name, g.description FROM `group` g WHERE g.group_id=?")){
+			$stmt->bind_param("i",$group_id);
+			$stmt->execute();
+			$stmt->bind_result($group_name, $group_description);
+			
+			if($stmt->fetch()){
+			?>
+			
+			
+			
 <html>
 	<head>
 	
-		<title>Groups</title>
-		<!-- Include header -->
+		<title><?php echo $group_name; ?></title>
+		<?php include("header.php"); ?>
 		
 	</head>
 	<body>
-		<!-- Include body header -->
+		<?php include("body_header.php"); ?>
 		
-		<?php print_errors($errors); ?>
 		
-		<table>
-			<tr>
-				<th>Name</th>
-				<th>Description</th>
-				<th>Creator</th>
-			</tr>
-			
-			<?php
-				if($stmt = $mysqli->prepare("SELECT * FROM group ORDER BY name")){
-					$stmt->execute();
-					$stmt->bind_results($group_id, $group_name, $group_description, $group_creator);
-					
-					while($stmt->fetch()){
-						echo '<tr><td><div class="group_name"><a href="group.php?id='.$group_id.'">'.$group_name.'</a></div><div class="group_description">'.$group_description.'</div></td>';
-						echo '<td><a href="user.php?username='.$group_creator.'">'.$group_creator.'</a></td></tr>';
-					}
-				}
-			?>
-			
-		</table>
+		<div id="title"><?php echo $group_name; ?>
+		<?php print_errors($error, $success); ?>
 		
-		<!-- Include body footer -->
+		
+		
+		<?php include("body_footer.php"); ?>
 	</body>
 </html>
+			
+			
+			
+			<?php
+			} else $invalid = 1;
+		} else $invalid = 1;
+	} else $invalid = 1;
+	
+	if($invalid == 1){ ?>
+	
+
+<html>
+	<head>
+	
+		<title>Group Not Found</title>
+		<?php include("header.php"); ?>
+		
+	</head>
+	<body>
+		<?php include("body_header.php"); ?>
+		
+		<div id="title">Group Not Found</div>
+		<div id="main_box">
+			The group you are trying to access does not exist or has been deleted.
+			<br /><br />
+			<a href="groups.php">Back to List of Groups</a>
+		</div>
+		
+		<?php include("body_footer.php"); ?>
+	</body>
+</html>
+	
+<?php } ?>

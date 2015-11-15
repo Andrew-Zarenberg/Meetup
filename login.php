@@ -1,12 +1,16 @@
 <?php include("include.php"); ?>
 
 <?php
+	if(isset($_SESSION["username"])){
+		// If already logged in cannot login again
+		header("Location: index.php?attemptlogin=true");
+	}
+	
+	
 	if(isset($_POST["username"])){
 		if($stmt = $mysqli->prepare("SELECT username FROM member WHERE username=? AND password=?")){
 			$pass = substr(md5($_POST["password"]),0, 20);
 			$stmt->bind_param("ss", $_POST["username"], $pass);
-			
-			echo $_POST["username"]." - ".$pass;
 			
 			$stmt->execute();
 			$stmt->bind_result($username);
@@ -16,7 +20,7 @@
 				header("Location: index.php?loggedin=1");
 			} else {
 				$stmt->close();
-				$errors[] = "Invalid username and password combination.";
+				$error[] = "Invalid username and password combination.";
 			}
 		}
 	}
@@ -26,16 +30,16 @@
 	<head>
 	
 		<title>Login</title>
-		<!-- Include header -->
+		<?php include("header.php"); ?>
 		
 	</head>
 	<body>
-		<!-- Include body header -->
+		<?php include("body_header.php"); ?>
 		
-		<?php print_errors($errors); ?>
+		<?php print_errors($error, $success); ?>
 		
 		<form action="login.php" method="post">
-			<table>
+			<table cellspacing="0">
 				<tr>
 					<th>Username</th>
 					<td><input name="username" /></td>
@@ -54,6 +58,6 @@
 			</table>
 		</form>
 		
-		<!-- Include body footer -->
+		<?php include("body_footer.php"); ?>
 	</body>
 </html>

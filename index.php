@@ -4,20 +4,25 @@
 	<head>
 	
 		<title>Meetup</title>
-		<!-- Include header -->
+		<?php include("header.php"); ?>
 		
 	</head>
 	<body>
-		<!-- Include body header -->
+		<?php include("body_header.php"); ?>
+		
 		
 		<?php
 			// If just created account
 			if(isset($_GET["newuser"])){
-				echo "<div>Account successfully created!</div>";
+				$success[] = "Account successfully created!";
 			} else if(isset($_GET["loggedin"])){
-				echo "<div>Successfully logged in</div>";
+				$success[] = "Successfully logged in!";
 			} else if(isset($_GET["loggedout"])){
-				echo "<div>Successfully logged out</div>";
+				$success[] = "Successfully logged out!";
+			} else if(isset($_GET["attemptregister"])){
+				$error[] = "You are already logged in - Log out to register a new account";
+			} else if(isset($_GET["attemptlogin"])){
+				$error[] = "You are already logged in - Log out to log in";
 			}
 			
 			
@@ -27,9 +32,11 @@
 				echo '<div id="welcome">Welcome <strong>'.$_SESSION["username"].'</strong></div>';
 			}
 		?>
+		
+		<?php print_errors($error, $success); ?>
 			
 			
 		
-		<!-- Include body footer -->
+		<?php include("body_footer.php"); ?>
 	</body>
 </html>

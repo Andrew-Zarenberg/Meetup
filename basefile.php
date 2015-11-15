@@ -4,14 +4,14 @@
 	<head>
 	
 		<title>PAGE TITLE HERE</title>
-		<!-- Include header -->
+		<?php include("header.php"); ?>
 		
 	</head>
 	<body>
-		<!-- Include body header -->
+		<?php include("body_header.php"); ?>
 		
 		<?php print_errors($errors); ?>
 		
-		<!-- Include body footer -->
+		<?php include("body_footer.php"); ?>
 	</body>
 </html>
