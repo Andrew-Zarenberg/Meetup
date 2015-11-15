@@ -9,12 +9,12 @@ body {
 
 a {
 	color:#105289;
-	text-decoration:none;
+	text-decoration:underline;
 }
 
 a:hover {
 	color:#D31141;
-	text-decoration:underline;
+	text-decoration:none;
 }
 
 table {
@@ -77,7 +77,6 @@ th.table_header {
 	background:white;
 	border:3px solid black;
 	padding:15px;
-	margin-top:25px;
 }
 
 #footer {
@@ -127,6 +126,18 @@ div.authorized a {
 
 table.box, table.box td, table.box th {
 	vertical-align:top;
+}
+
+div.actions {
+	background:black;
+	color:white;
+	text-align:center;
+	padding:5px;
+	margin:10px 0;
+}
+
+div.actions a {
+	color:white;
 }
 </style>
 
