@@ -139,6 +139,39 @@ div.actions {
 div.actions a {
 	color:white;
 }
+
+div.actions a.good {
+	font-weight:bold;
+	color:#A9F5A9;
+}
+
+div.actions a.bad {
+	font-weight:bold;
+	color:#F5A9A9;
+}
+
+
+#status {
+	text-align:center;
+	margin:10px;
+}
+
+#status span {
+	padding:5px;
+	margin-left;10px;
+	margin-right:10px;
+	font-weight:bold;
+}
+
+span.status_member {
+	background:#A9F5F2;
+	border:1px solid #04B4AE;
+}
+
+span.status_authorized {
+	background:#F2F5A9;
+	border:1px solid #AEB404;
+}
 </style>
 
 <!-- End Header -->

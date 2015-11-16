@@ -31,8 +31,6 @@
 								$stmt->execute();
 								$stmt->close();
 								$success[] = "Successfully left group.";
-							} else {
-								$error[] = "Error";
 							}
 						
 							break;
@@ -55,6 +53,9 @@
 				 // action bar (store in variable because used on top and bottom)
 				$actions = '<div class="actions"><a href="groups.php">Back to List of Groups</a>';
 				
+				// status bar
+				$status = "";
+				
 				// find out if user is authorized
 				if(isset($_SESSION["username"])){
 					if($stmt = $mysqli->prepare("SELECT authorized FROM groupuser WHERE group_id=? AND username=?")){
@@ -62,11 +63,13 @@
 						$stmt->execute();
 						$stmt->bind_result($auth);
 						if($stmt->fetch()){
+							$status .= '<span class="status_member">Group Member</span>';
 							if($auth == 1){
 								$actions .= ' | <a href="createevent.php?id='.$group_id.'">Create New Event</a>';
+								$status .= '<span class="status_authorized">Authorized User</span>';
 							}
-							$actions .= ' | <a href="group.php?id='.$group_id.'&action=leave">Leave Group</a>';
-						} else $actions .= ' | <a href="group.php?id='.$group_id.'&action=join">Join Group</a>';
+							$actions .= ' | <a href="group.php?id='.$group_id.'&action=leave" class="bad">Leave Group</a>';
+						} else $actions .= ' | <a href="group.php?id='.$group_id.'&action=join" class="good">Join Group</a>';
 						$stmt->close();
 					}
 				}
@@ -89,6 +92,9 @@
 		
 		<div id="title"><?php echo $group_name; ?></div>
 		<?php 
+			if($status != ""){
+				echo '<div id="status">'.$status.'</div>';
+			}
 			print_errors($error, $success); 
 			echo $actions; 
 		?>
