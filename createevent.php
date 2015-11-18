@@ -18,6 +18,26 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 			$group = $stmt;
 			if($group->fetch()){
 			
+			
+				// If submitted
+				if(isset($_POST["name"])){
+					if($_POST["name"] == "") $errors[] = "You must enter an event name";
+					
+					// Verify event location
+					if(strlen($_POST["location"]) < 6) $errors[] = "Invalid Location";
+					else {
+						$location_zipcode = substr($_POST["location"],0,5);
+						$location_name = substr($_POST["location"],5);
+						echo $location_zipcode." == ".$location_name;
+						
+						
+					}
+				}
+			
+					
+			
+			
+			
 			?>
 
 <html>
@@ -79,6 +99,46 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 							<option value="2">PM</option>
 						</select>
 					</td>
+				</tr>
+				
+				
+				<tr>
+					<th>End Time</th>
+					<td>
+						<select name="end_month">
+							<?php
+								$current_month = date("n");
+								for($x=1;$x<=12;$x++){
+									echo '<option value="'.$x.'"';
+									if($current_month == $x) echo ' selected';
+									echo '>'.$MONTH[$x].'</option>';
+								}
+							?>
+						</select>
+						
+						<select name="end_day">
+							<?php
+								$current_day = date("d");
+								for($x=1;$x<=31;$x++){
+									echo '<option value="'.$x.'"';
+									if($current_day == $x) echo ' selected';
+									echo '>'.$x.'</option>';
+								}
+							?>
+						</select>
+						
+						<!--<input name="start_day" size="2" placeholder="DD" /> / -->
+						<input name="end_year" size="4" placeholder="YYYY" /> at 
+						<input name="end_hour" size="2" placeholder="hh" />:
+						<input name="end_minute" size="2" placeholder="mm" />
+						<select name="end_ampm">
+							<option value="1">AM</option>
+							<option value="2">PM</option>
+						</select>
+					</td>
+				</tr>
+				
+				
 				
 				<tr>
 					<th>Location</th>
