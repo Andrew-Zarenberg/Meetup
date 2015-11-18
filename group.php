@@ -53,6 +53,9 @@
 				 // action bar (store in variable because used on top and bottom)
 				$actions = '<div class="actions"><a href="groups.php">Back to List of Groups</a>';
 				
+				// Authorized actions
+				$auth_actions = "";
+				
 				// status bar
 				$status = "";
 				
@@ -65,7 +68,8 @@
 						if($stmt->fetch()){
 							$status .= '<span class="status_member">Group Member</span>';
 							if($auth == 1){
-								$actions .= ' | <a href="createevent.php?id='.$group_id.'">Create New Event</a>';
+								//$actions .= ' | <a href="createevent.php?id='.$group_id.'">Create New Event</a>';
+								$auth_actions .= '<a href="editgroup.php?id='.$group_id.'">Edit Group</a> | <a href="createevent.php?id='.$group_id.'">Create New Event</a>';
 								$status .= '<span class="status_authorized">Authorized User</span>';
 							}
 							$actions .= ' | <a href="group.php?id='.$group_id.'&action=leave" class="bad">Leave Group</a>';
@@ -96,6 +100,11 @@
 				echo '<div id="status">'.$status.'</div>';
 			}
 			print_errors($error, $success); 
+			
+			if($auth_actions != ""){
+				echo '<div class="auth_actions"><div style="font-weight:bold;">Authorized User Actions:</div>'.$auth_actions.'</div>';
+			}
+			
 			echo $actions; 
 		?>
 		
@@ -153,18 +162,20 @@
 					<th class="table_header" colspan="4">Upcoming Events</th>
 				</tr>
 				
-				<tr>
-					<th>Name</th>
-					<th>Start Time</th>
-					<th>End Time</th>
-					<th>Location</th>
-				</tr>
+				
 				
 				<?php
 					if($stmt = $mysqli->prepare("SELECT event.event_id, event.title, event.description, event.start_time, event.end_time, location.lname, location.description, location.street, location.city, location.zip FROM event, location WHERE event.lname=location.lname AND event.zip=location.zip AND event.group_id=? ORDER BY event.start_time")){
 						$stmt->bind_param("i",$group_id);
 						$stmt->execute();
 						$stmt->bind_result($event_id, $event_title, $event_description, $event_start, $event_end, $location_name, $location_description, $location_street, $location_city, $location_zipcode);
+						$stmt->store_result();
+						
+						if($stmt->num_rows == 0){
+							echo '<tr><th colspan="4">No Events</th></tr>';
+						} else {
+							echo '<tr><th>Name</th><th>Start Time</th><th>End Time</th><th>Location</th></tr>';
+						}
 						
 						while($stmt->fetch()){
 							echo '<tr><td><div><a href="event.php?id='.$event_id.'">'.$event_title.'</a></div>'.$event_description.'</td>';

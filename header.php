@@ -128,6 +128,20 @@ table.box, table.box td, table.box th {
 	vertical-align:top;
 }
 
+
+div.auth_actions {
+	background:#5E610B;
+	border: 5px solid #D7DF01;
+	color:white;
+	text-align:center;
+	padding:5px;
+	margin:10px 0;
+}
+
+div.auth_actions a {
+	color:white;
+}
+
 div.actions {
 	background:black;
 	color:white;
@@ -153,7 +167,7 @@ div.actions a.bad {
 
 #status {
 	text-align:center;
-	margin:10px;
+	margin:20px;
 }
 
 #status span {
