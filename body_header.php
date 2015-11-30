@@ -19,7 +19,7 @@
 			<?php
 		} else {
 			echo "You are not logged in";
-			echo '<div style="float:right"><a href="register.php">Register</a> | <a href="login.php">Log In</a></div>';
+			echo '<div style="float:right"><a href="groups.php">List of Groups</a> | <a href="events.php">List of Events</a> | <a href="register.php">Register</a> | <a href="login.php">Log In</a></div>';
 		}
 	?>
 

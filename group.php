@@ -26,11 +26,35 @@
 				if(isset($_GET["action"])){
 					switch($_GET["action"]){
 						case "leave":
+							// Leaving a group will un-RSVP from ALL events in the group (since only group members may RSVP)
 							if($stmt = $mysqli->prepare("DELETE FROM groupuser WHERE group_id=? AND username=?")){
 								$stmt->bind_param("is",$group_id, $_SESSION["username"]);
 								$stmt->execute();
 								$stmt->close();
+								
+								
 								$success[] = "Successfully left group.";
+
+								// Loop through events to get event_id then delete user RSVP
+								if($stmt = $mysqli->prepare("SELECT event_id, title FROM event WHERE group_id=?")){
+									$stmt->bind_param("i", $group_id);
+									$stmt->execute();
+									$stmt->store_result();
+									$stmt->bind_result($event_id, $event_name);
+									
+									$event = $stmt;
+									while($event->fetch()){
+										if($stmt = $mysqli->prepare("DELETE FROM eventuser WHERE event_id=? AND username=?")){
+											$stmt->bind_param("is", $event_id, $_SESSION["username"]);
+											$stmt->execute();
+											$stmt->close();
+										}
+										
+										$success[] = "Un-RSVP'd from event: ".$event_name.".";
+									}
+									$event->close();
+								}
+								
 							}
 						
 							break;

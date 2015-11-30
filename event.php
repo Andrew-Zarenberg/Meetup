@@ -19,49 +19,75 @@
 				 * START IF EVENT FOUND
 				 */
 				 
-				// process any actions
-				if(isset($_GET["action"])){
-					switch($_GET["action"]){
-						case "leave":
-							if($stmt = $mysqli->prepare("DELETE FROM eventuser WHERE event_id=? AND username=?")){
-								$stmt->bind_param("is",$event_id,$_SESSION["username"]);
-								$stmt->execute();
-								$stmt->close();
-								$success[] = "Successfully un-RSVP'd from event.";
-							}
-							break;
-							
-						case "join":
-							if($stmt = $mysqli->prepare("INSERT INTO eventuser VALUES(?, ?, 1, 0)")){
-								$stmt->bind_param("is",$event_id, $_SESSION["username"]);
-								$stmt->execute();
-								$stmt->close();
-								$success[] = "Successfully RSVP'd to event.";
-							}
-							break;
-					
-					}
-				}
-				
+				 
 				
 				// action bar (store in variable because used on top and bottom)
 				$actions = '<div class="actions"><a href="events.php">Back to List of Events</a> | <a href="group.php?id='.$group_id.'">Back to Group: '.$group_name.'</a>';
 				
 				// status bar
 				$status = "";
-				
-				// find out if user is rsvp
+				 
 				if(isset($_SESSION["username"])){
-					if($stmt = $mysqli->prepare("SELECT rsvp FROM eventuser WHERE username=? AND event_id=? AND rsvp=1")){
-						$stmt->bind_param("si",$_SESSION["username"],$event_id);
+					
+					// check if user is in group (and then if authorized)
+					$group_member = false;
+					$group_authorized = false;
+					if($stmt = $mysqli->prepare("SELECT authorized FROM groupuser WHERE group_id=? AND username=?")){
+						$stmt->bind_param("is", $group_id, $_SESSION["username"]);
 						$stmt->execute();
+						$stmt->bind_result($g_authorized);
 						if($stmt->fetch()){
-							$status .= '<span class="status_member">RSVP\'d</span>';
-							$actions .= ' | <a href="event.php?id='.$event_id.'&action=leave" class="bad">Un-RSVP from Event</a>';
-						} else {
-							$actions .= ' | <a href="event.php?id='.$event_id.'&action=join" class="good">RSVP to Event</a>';
+							$group_member = true;
+							$group_authorized = $g_authorized;
 						}
 						$stmt->close();
+					}
+					 
+					 
+					// process any actions - only do actions if member is part of group
+					if(isset($_GET["action"])){
+						if($group_member){
+							switch($_GET["action"]){
+								case "leave":								
+									if($stmt = $mysqli->prepare("DELETE FROM eventuser WHERE event_id=? AND username=?")){
+										$stmt->bind_param("is",$event_id,$_SESSION["username"]);
+										$stmt->execute();
+										$stmt->close();
+										$success[] = "Successfully un-RSVP'd from event.";
+									}
+									break;
+									
+								case "join":
+									if($stmt = $mysqli->prepare("INSERT INTO eventuser VALUES(?, ?, 1, 0)")){
+										$stmt->bind_param("is",$event_id, $_SESSION["username"]);
+										$stmt->execute();
+										$stmt->close();
+										$success[] = "Successfully RSVP'd to event.";
+									}
+									break;
+							
+							}
+						} else {
+							$error[] = "You must be a group member to complete that action.";
+						}
+					}
+					
+				
+					// find out if user is rsvp
+					if($group_member){
+						if($stmt = $mysqli->prepare("SELECT rsvp FROM eventuser WHERE username=? AND event_id=? AND rsvp=1")){
+							$stmt->bind_param("si",$_SESSION["username"],$event_id);
+							$stmt->execute();
+							if($stmt->fetch()){
+								$status .= '<span class="status_member">RSVP\'d</span>';
+								$actions .= ' | <a href="event.php?id='.$event_id.'&action=leave" class="bad">Un-RSVP from Event</a>';
+							} else {
+								$actions .= ' | <a href="event.php?id='.$event_id.'&action=join" class="good">RSVP to Event</a>';
+							}
+							$stmt->close();
+						}
+					} else {
+						$actions .= ' | You must be a group member to RSVP to this event';
 					}
 				}
 				
@@ -81,7 +107,9 @@
 		?>
 		
 		
-		<div id="title"><?php echo $event_title; ?></div>
+		<div id="title"><?php echo $event_title; ?>
+			<div id="description">Hosted by <strong><?php echo $group_name; ?></strong></div>
+		</div>
 		<?php 
 			if($status != ""){
 				echo '<div id="status">'.$status.'</div>';

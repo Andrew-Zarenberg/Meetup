@@ -73,6 +73,10 @@ th.table_header {
 	margin-bottom:20px;
 }
 
+#description {
+	font-size:30px;
+}
+
 #main_box {
 	background:white;
 	border:3px solid black;
