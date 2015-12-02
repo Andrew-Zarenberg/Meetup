@@ -5,6 +5,8 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 
 <?php
 
+	$actions = "";
+
 	$invalid = 0;
 	if(isset($_GET["id"])){
 		$group_id = intval($_GET["id"]);
@@ -18,22 +20,35 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 			$group = $stmt;
 			if($group->fetch()){
 			
-			
-				// If submitted
-				if(isset($_POST["name"])){
-					if($_POST["name"] == "") $errors[] = "You must enter an event name";
-					
-					// Verify event location
-					if(strlen($_POST["location"]) < 6) $errors[] = "Invalid Location";
-					else {
-						$location_zipcode = substr($_POST["location"],0,5);
-						$location_name = substr($_POST["location"],5);
-						echo $location_zipcode." == ".$location_name;
-						
-						
-					}
+				$auth_user = 0;
+				// Check if user is authorized
+				if($stmt = $mysqli->prepare("SELECT authorized FROM groupuser WHERE group_id=? AND username=?")){
+					$stmt->bind_param("is",$group_id, $_SESSION["username"]);
+					$stmt->execute();
+					$stmt->bind_result($auth_user);
+					$stmt->fetch();
+					$stmt->close();
 				}
 			
+				if($auth_user == 1){
+				
+					$actions = '<div class="actions"><a href="group.php?id='.$group_id.'">Back to Group: '.$group_name.'</a></div>';
+				
+					// If submitted
+					if(isset($_POST["name"])){
+						if($_POST["name"] == "") $errors[] = "You must enter an event name";
+						
+						// Verify event location
+						if(strlen($_POST["location"]) < 6) $errors[] = "Invalid Location";
+						else {
+							$location_zipcode = substr($_POST["location"],0,5);
+							$location_name = substr($_POST["location"],5);
+							echo $location_zipcode." == ".$location_name;
+							
+							
+						}
+					}
+				
 					
 			
 			
@@ -53,8 +68,14 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 		<div id="title">Create New Event</div>
 		<?php print_errors($error, $success); ?>
 		
+		<?php echo $actions; ?>
+		
 		<form action="createevent.php?id=<?php echo $group_id; ?>" method="post">
 			<table cellspacing="0">
+				<tr>
+					<th colspan="2" class="table_header">Create New Event</th>
+				</tr>
+			
 				<tr>
 					<th>Group</th>
 					<td><?php echo $group_name; ?>
@@ -176,12 +197,40 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 			</table>
 		</form>
 		
+		<?php echo $actions; ?>
+		
 		<?php include("body_footer.php"); ?>
 	</body>
 </html>
 
 <?php
-		}
-	}
-}
+			} else $invalid = 1;
+		} else $invalid = 1;
+	} else $invalid = 1;
+} else $invalid = 1;
+
+if($invalid == 1){
 ?>
+
+<html>
+	<head>
+	
+		<title>Create New Event</title>
+		<?php include("header.php"); ?>
+		
+	</head>
+	<body>
+		<?php include("body_header.php"); ?>
+		
+		<div id="title">Error</div>
+		<?php echo $actions; ?>
+		<div id="main_box">
+			You are not authorized to perform this action.
+			<br /><br />
+			<a href="groups.php">Back to List of Groups</a>
+		</div>
+		<?php echo $actions; ?>
+		<?php include("body_footer.php"); ?>
+	</body>
+</html>
+<?php } ?>
