@@ -1,6 +1,9 @@
 <?php include("include.php");
 
 $MONTH = array("","January","February","March","April","May","June","July","August","September","October","November","December");
+$DAYS = array(-1, 31,        29,       31,      30,     31,   30,    31,    31,     30,         31,        30,        31); // Max days in month
+
+// Not going to take leap years into account, too much unnecessary effort - february has 29 max days for this.
  ?>
 
 <?php
@@ -36,16 +39,29 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 				
 					// If submitted
 					if(isset($_POST["name"])){
-						if($_POST["name"] == "") $errors[] = "You must enter an event name";
+						if($_POST["name"] == "") $error[] = "You must enter an event name";
+						
+						$start_month = intval($_POST["start_month"]);
+						$start_day = intval($_POST["start_day"]);
+						if($start_month < 1 || $start_month > 12 || $start_day < 1 || $start_day > $DAYS[$start_month]){
+							if($start_day > $DAYS[$start_month]) $error[] = "[Start Date] ".$MONTH[$start_month]." ".$start_day." does not exist.";
+							else $error[] = "Invalid start date/time";
+						}
+						
+						$end_month = intval($_POST["end_month"]);
+						$end_day = intval($_POST["end_day"]);
+						if($end_month < 1 || $end_month > 12 || $end_day < 1 || $end_day > $DAYS[$end_month]){
+							if($end_day > $DAYS[$end_month]) $error[] = "[End Date] ".$MONTH[$end_month]." ".$end_day." does not exist.";
+							else $error[] = "Invalid end date/time";
+						}
+						
 						
 						// Verify event location
-						if(strlen($_POST["location"]) < 6) $errors[] = "Invalid Location";
+						if(strlen($_POST["location"]) < 6) $error[] = "Invalid Location";
 						else {
 							$location_zipcode = substr($_POST["location"],0,5);
 							$location_name = substr($_POST["location"],5);
-							echo $location_zipcode." == ".$location_name;
-							
-							
+													
 						}
 					}
 				
@@ -83,7 +99,15 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 				
 				<tr>
 					<th>Event Name</th>
-					<td><input name="name" /></td>
+					<td><input name="name" <?php if(isset($_POST["name"])) echo 'value="'.$_POST["name"].'" '; ?>/></td>
+				</tr>
+				
+				
+				<tr>
+					<th>Description</th>
+					<td>
+						<textarea name="description" style="width:100%;" rows="10"><?php if(isset($_POST["description"])) echo $_POST["description"]; ?></textarea>
+					</td>
 				</tr>
 				
 				<tr>
@@ -94,7 +118,9 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 								$current_month = date("n");
 								for($x=1;$x<=12;$x++){
 									echo '<option value="'.$x.'"';
-									if($current_month == $x) echo ' selected';
+									if(isset($_POST["start_month"])){
+										if($start_month == $x) echo ' selected';
+									} else if($current_month == $x) echo ' selected';
 									echo '>'.$MONTH[$x].'</option>';
 								}
 							?>
@@ -105,19 +131,21 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 								$current_day = date("d");
 								for($x=1;$x<=31;$x++){
 									echo '<option value="'.$x.'"';
-									if($current_day == $x) echo ' selected';
+									if(isset($_POST["start_day"])){
+										if($start_day == $x) echo ' selected';
+									} else if($current_day == $x) echo ' selected';
 									echo '>'.$x.'</option>';
 								}
 							?>
 						</select>
 						
 						<!--<input name="start_day" size="2" placeholder="DD" /> / -->
-						<input name="start_year" size="4" placeholder="YYYY" /> at 
-						<input name="start_hour" size="2" placeholder="hh" />:
-						<input name="start_minute" size="2" placeholder="mm" />
+						<input name="start_year" size="4" placeholder="YYYY" <?php if(isset($_POST["start_year"])) echo 'value="'.$_POST["start_year"].'" '; ?>;/> at 
+						<input name="start_hour" size="2" placeholder="hh" <?php if(isset($_POST["start_hour"])) echo 'value="'.$_POST["start_hour"].'" '; ?>/>:
+						<input name="start_minute" size="2" placeholder="mm" <?php if(isset($_POST["start_minute"])) echo 'value="'.$_POST["start_minute"].'" '; ?>/>
 						<select name="start_ampm">
 							<option value="1">AM</option>
-							<option value="2">PM</option>
+							<option value="2"<?php if(isset($_POST["start_ampm"]) && $_POST["start_ampm"] == 2) echo ' selected'; ?>>PM</option>
 						</select>
 					</td>
 				</tr>
@@ -131,7 +159,9 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 								$current_month = date("n");
 								for($x=1;$x<=12;$x++){
 									echo '<option value="'.$x.'"';
-									if($current_month == $x) echo ' selected';
+									if(isset($_POST["end_month"])){
+										if($end_month == $x) echo ' selected';
+									} else if($current_month == $x) echo ' selected';
 									echo '>'.$MONTH[$x].'</option>';
 								}
 							?>
@@ -142,19 +172,21 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 								$current_day = date("d");
 								for($x=1;$x<=31;$x++){
 									echo '<option value="'.$x.'"';
-									if($current_day == $x) echo ' selected';
+									if(isset($_POST["end_day"])){
+										if($end_day == $x) echo ' selected';
+									} else if($current_day == $x) echo ' selected';
 									echo '>'.$x.'</option>';
 								}
 							?>
 						</select>
 						
 						<!--<input name="start_day" size="2" placeholder="DD" /> / -->
-						<input name="end_year" size="4" placeholder="YYYY" /> at 
-						<input name="end_hour" size="2" placeholder="hh" />:
-						<input name="end_minute" size="2" placeholder="mm" />
+						<input name="end_year" size="4" placeholder="YYYY" <?php if(isset($_POST["end_year"])) echo 'value="'.$_POST["end_year"].'" '; ?>/> at 
+						<input name="end_hour" size="2" placeholder="hh" <?php if(isset($_POST["end_hour"])) echo 'value="'.$_POST["end_hour"].'" '; ?>/>:
+						<input name="end_minute" size="2" placeholder="mm" <?php if(isset($_POST["end_minute"])) echo 'value="'.$_POST["end_minute"].'" '; ?>/>
 						<select name="end_ampm">
 							<option value="1">AM</option>
-							<option value="2">PM</option>
+							<option value="2"<?php if(isset($_POST["end_ampm"]) && $_POST["end_ampm"] == 2) echo ' selected'; ?>>PM</option>
 						</select>
 					</td>
 				</tr>
@@ -164,7 +196,7 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 				<tr>
 					<th>Location</th>
 					<td>
-						<select name="location">
+						<select name="location" onchange="locationSelector(this)">
 							<option value="-1">Select Location...</option>
 							<?php
 								if($stmt = $mysqli->prepare("SELECT lname, zip, city FROM location")){
@@ -177,17 +209,47 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 								}	
 							
 							?>
+							<option value="other">Add New Location...</option>
 							
 						</select>
 					</td>
 				</tr>
 				
-				<tr>
-					<th>Description</th>
-					<td>
-						<textarea name="description" style="width:100%;" rows="10"></textarea>
-					</td>
+				<tr class="location_row">
+					<th>Location Name</th>
+					<td><input name="loc_name" size="20" maxlength="20" /></td>
 				</tr>
+				
+				<tr class="location_row">
+					<th>Location Description</th>
+					<td><textarea name="loc_description" style="width:100%;" rows="5"></textarea></td>
+				</tr>
+				
+				<tr class="location_row">
+					<th>Location Street Address</th>
+					<td><input name="loc_street" size="30" maxlength="50" /></td>
+				</tr>
+				
+				<tr class="location_row">
+					<th>Location City</th>
+					<td><input name="loc_city" size="20" maxlength="20" /></td>
+				</tr>
+				
+				<tr class="location_row">
+					<th>Location Zipcode</th>
+					<td><input name="loc_zip" size="5" maxlength="5" /></td>
+				</tr>
+				
+				<tr class="location_row">
+					<th>Location Latitude</th>
+					<td><input name="loc_latitude" size="20" /></td>
+				</tr>
+				
+				<tr class="location_row">
+					<th>Location Longitude</th>
+					<td><input name="loc_longitude" size="20" /></td>
+				</tr>
+				
 				
 				<tr>
 					<th colspan="2">
@@ -198,6 +260,27 @@ $MONTH = array("","January","February","March","April","May","June","July","Augu
 		</form>
 		
 		<?php echo $actions; ?>
+		
+		<script type="text/javascript">
+			function setLocationRows(n){
+				var a = document.getElementsByTagName("tr");
+				for(var x=0;x<a.length;x++){
+					if(a[x].className == "location_row"){
+						a[x].style.display = n;
+					}
+				}
+			}
+			
+			function locationSelector(e){
+				if(e.value == "other"){
+					setLocationRows("");
+				} else {
+					setLocationRows("none");
+				}
+			}
+			
+			setLocationRows("none");
+		</script>
 		
 		<?php include("body_footer.php"); ?>
 	</body>
