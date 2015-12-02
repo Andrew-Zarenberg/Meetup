@@ -1,5 +1,13 @@
 <?php include("include.php"); ?>
 
+<?php
+	$actions = "";
+	// If logged in, allow user to create new group
+	if(isset($_SESSION["username"])){
+		$actions = '<div class="actions"><a href="creategroup.php">Create New Group</a></div>';
+	}
+?>
+
 <html>
 	<head>
 	
@@ -11,6 +19,8 @@
 		<?php include("body_header.php"); ?>
 		
 		<?php print_errors($error, $success); ?>
+		
+		<?php echo $actions; ?>
 		
 		<table cellspacing="0">
 			<tr>
@@ -56,6 +66,8 @@
 			?>
 			
 		</table>
+		
+		<?php echo $actions; ?>
 		
 		<?php include("body_footer.php"); ?>
 	</body>

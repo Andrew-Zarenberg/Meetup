@@ -34,6 +34,9 @@
 								
 								
 								$success[] = "Successfully left group.";
+								
+								// Since num_members is already chosen while user is still in group, decrement.
+								$num_members--;
 
 								// Loop through events to get event_id then delete user RSVP
 								if($stmt = $mysqli->prepare("SELECT event_id, title FROM event WHERE group_id=?")){
@@ -44,13 +47,24 @@
 									
 									$event = $stmt;
 									while($event->fetch()){
+									
+										// I know SELECT is not necessary to delete entries from eventuser, but to display
+										// feedback messages to user it is necessary.  Let user know each event they are now un-RSVP'd from
+										if($stmt = $mysqli->prepare("SELECT event_id FROM eventuser WHERE event_id=? AND username=?")){
+											$stmt->bind_param("is", $event_id, $_SESSION["username"]);
+											$stmt->execute();
+											if($stmt->fetch()){
+												$success[] = "Un-RSVP'd from event: ".$event_name.".";
+											}
+											$stmt->close();
+										}
+									
 										if($stmt = $mysqli->prepare("DELETE FROM eventuser WHERE event_id=? AND username=?")){
 											$stmt->bind_param("is", $event_id, $_SESSION["username"]);
 											$stmt->execute();
 											$stmt->close();
 										}
 										
-										$success[] = "Un-RSVP'd from event: ".$event_name.".";
 									}
 									$event->close();
 								}
@@ -60,13 +74,22 @@
 							break;
 							
 						case "join":
-							if($stmt = $mysqli->prepare("INSERT INTO groupuser VALUES(?, ?, 0)")){
-								$stmt->bind_param("is",$group_id, $_SESSION["username"]);
+						
+							$user_auth = 0;
+							if($group_creator == $_SESSION["username"]){
+								$user_auth = 1;
+							}
+						
+							if($stmt = $mysqli->prepare("INSERT INTO groupuser VALUES(?, ?, ?)")){
+								$stmt->bind_param("isi",$group_id, $_SESSION["username"], $user_auth);
 								$stmt->execute();
 								$stmt->close();
 								
 								$success[] = "Successfully joined group.";
 							}
+							
+							$num_members++;
+							
 							break;
 							
 					}
