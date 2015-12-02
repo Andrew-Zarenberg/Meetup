@@ -1,5 +1,10 @@
 <?php include("include.php"); ?>
 
+<?php
+	$actions = '<div class="actions"><a href="groups.php">Back to List of Groups</a></div>';
+	if(isset($_SESSION["username"])){
+?>
+
 <html>
 	<head>
 	
@@ -10,7 +15,11 @@
 	<body>
 		<?php include("body_header.php"); ?>
 		
+		<div id="title">Create New Group</div>
+		
 		<?php print_errors($error, $success); ?>
+		
+		<?php echo $actions; ?>
 		
 		<form action="creategroup.php" method="post">
 			<table cellspacing="0">
@@ -36,7 +45,7 @@
 								$stmt->execute();
 								$stmt->bind_result($interest_name);
 								while($stmt->fetch()){
-									echo '<div><input type="checkbox" name="'.$interest_name.'" /><label for="'.$interest_name.'">'.$interest_name.'</label>';
+									echo '<div><input type="checkbox" name="'.$interest_name.'" id="'.$interest_name.'" /><label for="'.$interest_name.'">'.$interest_name.'</label>';
 								}
 								$stmt->close();
 							}
@@ -50,6 +59,34 @@
 			</table>
 		</form>
 		
+		<?php echo $actions; ?>
+		
 		<?php include("body_footer.php"); ?>
 	</body>
 </html>
+
+<?php
+	} else { // If user not logged in
+?>
+<html>
+	<head>
+	
+		<title>Create New Group</title>
+		<?php include("header.php"); ?>
+		
+	</head>
+	<body>
+		<?php include("body_header.php"); ?>
+		
+		<div id="title">Error</div>
+		<?php echo $actions; ?>
+		<div id="main_box">
+			You must be logged in to create a new group.
+			<br /><br />
+			<a href="login.php">Login</a> | <a href="register.php">Register</a>
+		</div>
+		<?php echo $actions; ?>
+		<?php include("body_footer.php"); ?>
+	</body>
+</html>
+<?php } ?>
