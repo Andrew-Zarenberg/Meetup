@@ -6,11 +6,11 @@
 	if(isset($_GET["id"])){
 		$event_id = intval($_GET["id"]);
 		
-		if($stmt = $mysqli->prepare("SELECT event.title, event.description, event.start_time, event.end_time, location.lname, location.description, location.street, location.city, location.zip, g.group_id, g.group_name FROM event, location, `group` g WHERE event.lname=location.lname AND event.zip=location.zip AND g.group_id=event.group_id AND event.event_id=?")){
+		if($stmt = $mysqli->prepare("SELECT event.title, event.description, event.start_time, event.end_time, location.lname, location.description, location.street, location.city, location.zip, g.group_id, g.group_name, g.username FROM event, location, `group` g WHERE event.lname=location.lname AND event.zip=location.zip AND g.group_id=event.group_id AND event.event_id=?")){
 			$stmt->bind_param("i",$event_id);
 			$stmt->execute();
 			$stmt->store_result();
-			$stmt->bind_result($event_title, $event_description, $event_start, $event_end, $location_name, $location_description, $location_street, $location_city, $location_zipcode, $group_id, $group_name);
+			$stmt->bind_result($event_title, $event_description, $event_start, $event_end, $location_name, $location_description, $location_street, $location_city, $location_zipcode, $group_id, $group_name, $group_creator);
 			
 			$event = $stmt;
 			if($event->fetch()){
@@ -46,7 +46,7 @@
 					 
 					// process any actions - only do actions if member is part of group
 					if(isset($_GET["action"])){
-						if($group_member){
+						//if($group_member){
 							switch($_GET["action"]){
 								case "leave":								
 									if($stmt = $mysqli->prepare("DELETE FROM eventuser WHERE event_id=? AND username=?")){
@@ -58,6 +58,26 @@
 									break;
 									
 								case "join":
+								
+									// If user not in group, add user to group
+									if(!$group_member){		
+										$user_auth = 0;
+										if($group_creator == $_SESSION["username"]){
+											$user_auth = 1;
+										}
+									
+										if($stmt = $mysqli->prepare("INSERT INTO groupuser VALUES(?, ?, ?)")){
+											$stmt->bind_param("isi",$group_id, $_SESSION["username"], $user_auth);
+											$stmt->execute();
+											$stmt->close();
+											
+											$success[] = "Successfully joined group.";
+										}
+										$group_member = true;
+									}
+									
+									
+									
 									if($stmt = $mysqli->prepare("INSERT INTO eventuser VALUES(?, ?, 1, 0)")){
 										$stmt->bind_param("is",$event_id, $_SESSION["username"]);
 										$stmt->execute();
@@ -67,9 +87,9 @@
 									break;
 							
 							}
-						} else {
-							$error[] = "You must be a group member to complete that action.";
-						}
+						//} else {
+						//	$error[] = "You must be a group member to complete that action.";
+						//}
 					}
 					
 				
@@ -87,7 +107,8 @@
 							$stmt->close();
 						}
 					} else {
-						$actions .= ' | You must be a group member to RSVP to this event';
+						//$actions .= ' | You must be a group member to RSVP to this event';
+						$actions .= ' | <a href="event.php?id='.$event_id.'&action=join" class="good">Join Group and RSVP to Event</a>';
 					}
 				}
 				
