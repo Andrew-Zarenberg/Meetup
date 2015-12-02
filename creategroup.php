@@ -3,6 +3,61 @@
 <?php
 	$actions = '<div class="actions"><a href="groups.php">Back to List of Groups</a></div>';
 	if(isset($_SESSION["username"])){
+		if(isset($_POST["name"])){
+			
+			if($_POST["name"] == "") $error[] = "You must enter a group name.";
+			if($_POST["description"] == "") $error[] = "You must enter a description";
+			
+			// create group
+			if($stmt = $mysqli->prepare("INSERT INTO `group` (group_name, description, username) VALUES(?,?,?)")){
+				$stmt->bind_param("sss", $_POST["name"], $_POST["description"], $_SESSION["username"]);
+				$stmt->execute();
+				$stmt->close();
+				
+				// Get newly created group id and redirect to page - will be the max(group_id)
+				if($stmt = $mysqli->prepare("SELECT max(group_id) FROM `group`")){
+					$stmt->execute();
+					$stmt->bind_result($group_id);
+					if($stmt->fetch()){
+					
+						// Add interests - must check every interest against checkboxes
+						$stmt->close();
+						if($stmt = $mysqli->prepare("SELECT interest_name FROM interest")){
+							$stmt->execute();
+							$stmt->store_result();
+							$stmt->bind_result($interest_name);
+							
+							$interests = $stmt;
+							while($interests->fetch()){
+								if(isset($_POST["interest_".$interest_name])){
+									if($stmt = $mysqli->prepare("INSERT INTO groupinterest VALUES(?,?)")){
+										$stmt->bind_param("si",$interest_name,$group_id);
+										$stmt->execute();
+										$stmt->close();
+									}
+								}
+							}
+							$interests->close();
+						}
+									
+					
+					
+						//$stmt->close();
+						// Add used to newly created group - make authorized
+						if($stmt = $mysqli->prepare("INSERT INTO groupuser VALUES(?,?,1)")){
+							$stmt->bind_param("is", $group_id, $_SESSION["username"]);
+							$stmt->execute();
+							$stmt->close();
+							
+						
+							header("Location: group.php?id=".$group_id);
+						} else $error[] = "An error occurred adding user to group.";
+					} else $error[] = "An error occurred creating new group.";
+				}
+			}
+			
+			
+		}
 ?>
 
 <html>
@@ -45,7 +100,7 @@
 								$stmt->execute();
 								$stmt->bind_result($interest_name);
 								while($stmt->fetch()){
-									echo '<div><input type="checkbox" name="'.$interest_name.'" id="'.$interest_name.'" /><label for="'.$interest_name.'">'.$interest_name.'</label>';
+									echo '<div><input type="checkbox" name="interest_'.$interest_name.'" id="interest_'.$interest_name.'" /><label for="'.$interest_name.'">'.$interest_name.'</label>';
 								}
 								$stmt->close();
 							}

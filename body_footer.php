@@ -11,7 +11,7 @@
 // (ex: are you sure you wish to leave this group?)
 var a = document.getElementsByTagName("a");
 for(var x=0;x<a.length;x++){
-	if(a[x].className == "bad" && a[x].parentNode.className == "actions"){
+	if(a[x].className == "bad"){// && a[x].parentNode.className == "actions"){
 		a[x].onclick = function(e){
 			e.preventDefault ? e.preventDefault() : e.returnValue = false;
 			

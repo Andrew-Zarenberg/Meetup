@@ -92,6 +92,39 @@
 							
 							break;
 							
+						case "delete":
+							// Only group creator may delete a group
+							if($_SESSION["username"] == $group_creator){
+								
+								// First delete all group interests
+								if($stmt = $mysqli->prepare("DELETE FROM groupinterest WHERE group_id=?")){
+									$stmt->bind_param("i",$group_id);
+									$stmt->execute();
+									$stmt->close();
+								}
+								
+								// Next delete all memberships
+								if($stmt = $mysqli->prepare("DELETE FROM groupuser WHERE group_id=?")){
+									$stmt->bind_param("i",$group_id);
+									$stmt->execute();
+									$stmt->close();
+								}
+								
+								// Lastly delete the group
+								if($stmt = $mysqli->prepare("DELETE FROM `group` WHERE group_id=?")){
+									$stmt->bind_param("i",$group_id);
+									$stmt->execute();
+									$stmt->close();
+								}
+								
+								header("Location: groups.php?del=true");
+								
+							} else {
+								$error[] = "Only the group creator may delete this group.";
+							}
+							break;
+							
+							
 					}
 				}
 				 
@@ -117,6 +150,8 @@
 							if($auth == 1){
 								//$actions .= ' | <a href="createevent.php?id='.$group_id.'">Create New Event</a>';
 								$auth_actions .= '<a href="editgroup.php?id='.$group_id.'">Edit Group</a> | <a href="createevent.php?id='.$group_id.'">Create New Event</a>';
+								
+								if($_SESSION["username"] == $group_creator) $auth_actions .= ' | <a href="group.php?id='.$group_id.'&action=delete" class="bad">Delete Group</a>';
 								$status .= '<span class="status_authorized">Authorized User</span>';
 							}
 							$actions .= ' | <a href="group.php?id='.$group_id.'&action=leave" class="bad">Leave Group</a>';

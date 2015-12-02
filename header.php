@@ -158,14 +158,14 @@ div.actions a {
 	color:white;
 }
 
-div.actions a.good {
+a.good {
 	font-weight:bold;
-	color:#A9F5A9;
+	color:#A9F5A9!important;
 }
 
-div.actions a.bad {
+a.bad {
 	font-weight:bold;
-	color:#F5A9A9;
+	color:#F5A9A9!important;
 }
 
 

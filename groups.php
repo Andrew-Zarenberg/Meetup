@@ -6,6 +6,10 @@
 	if(isset($_SESSION["username"])){
 		$actions = '<div class="actions"><a href="creategroup.php">Create New Group</a></div>';
 	}
+	
+	if(isset($_GET["del"]) && $_GET["del"] == "true"){
+		$success[] = "Group successfully deleted.";
+	}
 ?>
 
 <html>
@@ -17,6 +21,8 @@
 	</head>
 	<body>
 		<?php include("body_header.php"); ?>
+		
+		<div id="title">Groups</div>
 		
 		<?php print_errors($error, $success); ?>
 		
