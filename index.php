@@ -95,6 +95,43 @@
 				</table>
 			<!--</div>-->
 			
+			
+			
+			<?php } else { 
+			// If not logged in ?>
+			
+			<div id="title">Meetup</div>
+			
+			<?php print_errors($error, $success); ?>
+			
+			<table cellspacing="0">
+				<tr>
+					<th class="table_header">Welcome to Meetup!</th>
+				</tr>
+				
+				<tr>
+					<th class="table_header">New here?  <a href="register.php">Register</a> an account now!</th>
+				</tr>
+				
+				<tr>
+					<th class="table_header">Returning user?  <a href="login.php">Login</a>!</th>
+				</tr>
+				
+				<tr>
+					<td>
+						<div>
+							Welcome to Meetup, a place to connect with other people with common interests!
+							
+							<br /><br />
+							This application has been designed with the user in mind, so everything should be straight forward.  If anything is unclear you can see the <a href="readme.php">README</a> file.
+							
+							<br />	
+						</div>
+					</td>
+				</tr>
+			</table>
+			
+			
 			<?php } ?>
 		
 		<?php include("body_footer.php"); ?>

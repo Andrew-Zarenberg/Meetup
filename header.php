@@ -84,9 +84,10 @@ th.table_header {
 }
 
 #footer {
-	font-size:11px;
+	font-size:12px;
 	text-align:center;
 	margin-top:50px;
+	margin-bottom:50px;
 }
 
 div.success {

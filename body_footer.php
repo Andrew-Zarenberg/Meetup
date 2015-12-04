@@ -2,7 +2,8 @@
 
 </div>
 <div id="footer">
-	<strong>Meetup</strong> created by <a href="http://github.com/Andrew-Zarenberg" target="_blank">Andrew Zarenberg</a>
+	<strong>Meetup</strong> created by <a href="http://github.com/Andrew-Zarenberg" target="_blank">Andrew Zarenberg</a><br />
+	View the code on <a href="https://github.com/Andrew-Zarenberg/Meetup" target="_blank">GitHub</a>
 </div>
 
 <script type="text/javascript">
