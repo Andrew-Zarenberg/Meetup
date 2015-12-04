@@ -39,21 +39,40 @@ $DAYS = array(-1, 31,        29,       31,      30,     31,   30,    31,    31, 
 				
 					// If submitted
 					if(isset($_POST["name"])){
+					
+						// Make sure event name is specified
 						if($_POST["name"] == "") $error[] = "You must enter an event name";
 						
+						// Start date
 						$start_month = intval($_POST["start_month"]);
 						$start_day = intval($_POST["start_day"]);
+						$start_year = intval($_POST["start_year"]);
+						$start_hour = intval($_POST["start_hour"]);
+						$start_minute = intval($_POST["start_minute"]);
+						$start_ampm = intval($_POST["start_ampm"]);
 						if($start_month < 1 || $start_month > 12 || $start_day < 1 || $start_day > $DAYS[$start_month]){
 							if($start_day > $DAYS[$start_month]) $error[] = "[Start Date] ".$MONTH[$start_month]." ".$start_day." does not exist.";
 							else $error[] = "Invalid start date/time";
+						} else {
+							if($start_ampm != 1 && $start_ampm != 2) $error[] = "[Start Date] Invalid AM/PM input";
+							else if($start_hour < 1 || $start_hour > 12 || $start_minute < 0 || $start_minute > 60) $error[] = "[Start Date] ".$_POST["start_hour"].":".$_POST["start_minute"]." is not a valid time.";
 						}
 						
+						// End date
 						$end_month = intval($_POST["end_month"]);
 						$end_day = intval($_POST["end_day"]);
+						$end_year = intval($_POST["end_year"]);
+						$end_hour = intval($_POST["end_hour"]);
+						$end_minute = intval($_POST["end_minute"]);
+						$end_ampm = intval($_POST["end_ampm"]);
 						if($end_month < 1 || $end_month > 12 || $end_day < 1 || $end_day > $DAYS[$end_month]){
 							if($end_day > $DAYS[$end_month]) $error[] = "[End Date] ".$MONTH[$end_month]." ".$end_day." does not exist.";
 							else $error[] = "Invalid end date/time";
+						} else {
+							if($end_ampm != 1 && $end_ampm != 2) $error[] = "[End Date] Invalid AM/PM input";
+							else if($end_hour < 1 || $end_hour > 12 || $end_minute < 0 || $end_minute > 60) $error[] = "[End Date] ".$_POST["end_hour"].":".$_POST["end_minute"]." is not a valid time.";
 						}
+						
 						
 						
 						// Verify event location
@@ -62,6 +81,37 @@ $DAYS = array(-1, 31,        29,       31,      30,     31,   30,    31,    31, 
 							$location_zipcode = substr($_POST["location"],0,5);
 							$location_name = substr($_POST["location"],5);
 													
+						}
+						
+						// If no errors, begin adding event
+						if(count($error) == 0){
+							if($start_ampm == 2 && $start_hour < 11) $start_hour += 12;
+							$start_date = new DateTime();
+							$start_date->setDate($start_year, $start_month, $start_day);
+							$start_date->setTime($start_hour, $start_minute, 0);
+							
+							if($end_ampm == 2 && $end_hour < 11) $end_hour += 12;
+							$end_date = new DateTime();
+							$end_date->setDate($end_year, $end_month, $end_day);
+							$end_date->setTime($end_hour, $end_minute, 0);
+							
+							$start_date_string = $start_date->format("Y-m-d H:i:s");
+							$end_date_string = $end_date->format("Y-m-d H:i:s");
+							
+							if($stmt = $mysqli->prepare("INSERT INTO event (title, description, start_time, end_time, group_id, lname, zip) VALUES(?,?,?,?,?,?,?)")){
+								$stmt->bind_param("ssssisi", $_POST["name"], $_POST["description"], $start_date_string, $end_date_string, $group_id, $location_name, $location_zipcode);
+								$stmt->execute();
+								$stmt->close();
+								
+								// Get new id and redirect
+								if($stmt = $mysqli->prepare("SELECT max(event_id) FROM event")){
+									$stmt->execute();
+									$stmt->bind_result($event_id);
+									if($stmt->fetch()){
+										header("Location: event.php?id=".$event_id."&action=join");
+									}
+								}
+							}
 						}
 					}
 				
