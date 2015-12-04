@@ -2,6 +2,7 @@
 
 <?php
 
+	$auth_actions = "";
 	$invald = 0;
 	if(isset($_GET["id"])){
 		$event_id = intval($_GET["id"]);
@@ -113,6 +114,10 @@
 				}
 				
 				$actions .= '</div>';
+				
+				if($group_authorized){
+					$auth_actions .= '<a href="event.php?id='.$event_id.'&action=del" class="bad">Delete Event</a>';
+				}
 			?>
 	
 <html>
@@ -135,7 +140,13 @@
 			if($status != ""){
 				echo '<div id="status">'.$status.'</div>';
 			}
+					
 			print_errors($error, $success); 
+			
+			if($auth_actions != ""){
+				echo '<div class="auth_actions"><div style="font-weight:bold;">Authorized User Actions:</div>'.$auth_actions.'</div>';
+			}
+			
 			echo $actions;
 		?>
 		

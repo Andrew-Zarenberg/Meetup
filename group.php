@@ -110,6 +110,20 @@
 									$stmt->close();
 								}
 								
+								// Deleve all RSVP's to events
+								if($stmt = $mysqli->prepare("DELETE FROM eventuser WHERE event_id IN (SELECT event_id FROM event WHERE group_id=?)")){
+									$stmt->bind_param("i",$group_id);
+									$stmt->execute();
+									$stmt->close();
+								}
+								
+								// Next delete all events
+								if($stmt = $mysqli->prepare("DELETE FROM event WHERE group_id=?")){
+									$stmt->bind_param("i",$group_id);
+									$stmt->execute();
+									$stmt->close();
+								}
+								
 								// Lastly delete the group
 								if($stmt = $mysqli->prepare("DELETE FROM `group` WHERE group_id=?")){
 									$stmt->bind_param("i",$group_id);
@@ -199,7 +213,7 @@
 				<tr>
 					<td style="width:50%;">
 						<strong>Group Description:</strong><br />
-						<?php echo $group_description; ?>
+						<?php echo nl2br($group_description); ?>
 					</td>
 					
 					<td style="width:50%" rowspan="2">
