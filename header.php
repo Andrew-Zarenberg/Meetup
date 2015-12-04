@@ -190,6 +190,14 @@ span.status_authorized {
 	background:#F2F5A9;
 	border:1px solid #AEB404;
 }
+
+table.noborder {
+	border:0;
+}
+
+table.noborder td, table.noborder th {
+	border:0;
+}
 </style>
 
 <!-- End Header -->
