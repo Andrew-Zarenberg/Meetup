@@ -156,6 +156,8 @@
 					<td style="width:50%;">
 						<?php
 							echo '<div><strong>Hosted by: </strong> <a href="group.php?id='.$group_id.'">'.$group_name.'</a></div>';
+							echo '<div><strong>Start:</strong> '.(new Datetime($event_start))->format($EVENT_DATE_FORMAT).'</div>';
+							echo '<div><strong>End:</strong> '.(new Datetime($event_end))->format($EVENT_DATE_FORMAT).'</div><br />';
 							echo '<strong>Event Description:</strong><br />'.$event_description;
 						?>
 					</td>
@@ -205,7 +207,36 @@
 
 <?php
 			$event->close();
-			}
-		}
-	}
-?>
+			} else $invalid = 1;
+		} else $invalid = 1;
+	} else $invalid = 1;
+	
+	
+	if($invalid == 1){ 
+	
+		$actions = '<div class="actions"><a href="events.php">Back to List of Events</a></div>';
+	?>
+	
+<html>
+	<head>
+	
+		<title>Event Not Found</title>
+		<?php include("header.php"); ?>
+		
+	</head>
+	<body>
+		<?php include("body_header.php"); ?>
+		
+		<div id="title">Event Not Found</div>
+		<?php echo $actions; ?>
+		<div id="main_box">
+			The event you are trying to access does not exist or has been deleted.
+			<br /><br />
+			<a href="events.php">Back to List of Events</a>
+		</div>
+		<?php echo $actions; ?>
+		<?php include("body_footer.php"); ?>
+	</body>
+</html>
+	
+	<?php } ?>

@@ -20,7 +20,7 @@
 	</td>
 	
 	<td>
-		<form action="search.php" method="post" style="margin:0">
+		<form action="search.php" method="get" style="margin:0">
 			Search Groups/Events:
 			<input name="search" />
 			<input type="submit" value="Search" />

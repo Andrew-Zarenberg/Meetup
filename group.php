@@ -274,6 +274,10 @@
 						}
 						
 						while($stmt->fetch()){
+						
+							// Because time, have to do check with PHP and not in SQL
+							if(time() > (new Datetime($event_start))->getTimestamp()) continue;
+						
 							echo '<tr><td><div><a href="event.php?id='.$event_id.'">'.$event_title.'</a></div>'.$event_description.'</td>';
 							echo '<td>'.(new Datetime($event_start))->format($EVENT_DATE_FORMAT).'</td>';
 							echo '<td>'.(new Datetime($event_end))->format($EVENT_DATE_FORMAT).'</td>';

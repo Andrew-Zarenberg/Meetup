@@ -1,7 +1,7 @@
 <?php include("include.php"); ?>
 
 <?php
-	$search = htmlentities($_POST["search"]);
+	$search = htmlentities($_GET["search"]);
 ?>
 
 <html>
@@ -48,7 +48,7 @@
 					
 					$groups = $stmt;
 					while($groups->fetch()){
-						echo '<tr><td>';
+						echo '<tr><td>('.$strength.' / 5) ';
 						
 						for($x=0;$x<5;$x++){
 							if($strength > $x) echo 'X';
