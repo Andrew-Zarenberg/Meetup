@@ -1,6 +1,7 @@
 <?php include("include.php"); ?>
 
 <?php
+	$group_authorized = false;
 
 	$auth_actions = "";
 	$invald = 0;
@@ -31,8 +32,7 @@
 				if(isset($_SESSION["username"])){
 					
 					// check if user is in group (and then if authorized)
-					$group_member = false;
-					$group_authorized = false;
+					$group_member = false;					
 					if($stmt = $mysqli->prepare("SELECT authorized FROM groupuser WHERE group_id=? AND username=?")){
 						$stmt->bind_param("is", $group_id, $_SESSION["username"]);
 						$stmt->execute();

@@ -6,7 +6,7 @@
 		<tr>
 		
 	<!--<div style="float:left;">-->
-		<td><a href="index.php">Home Page</a></td>
+		<td style="padding:0;"><a href="index.php">Home Page</a> | <a href="readme.php">README</a></td>
 	<!--</div>-->
 	
 	<td>
@@ -33,8 +33,14 @@
 		<a href="groups.php">List of Groups</a> | 
 		<a href="events.php">List of Events</a> |
 		<a href="interests.php">List of Interests</a> | 
-		<a href="user.php">My Profile</a> | 
-		<a href="logout.php">Log Out</a>
+		
+		<?php if(isset($_SESSION["username"])){ ?>
+			<a href="user.php">My Profile</a> | 
+			<a href="logout.php">Log Out</a>
+		<?php } else { ?>
+			<a href="register.php">Register</a> | 
+			<a href="login.php">Login</a>
+		<?php } ?>
 	</td>
 	<!--</div>-->
 	
