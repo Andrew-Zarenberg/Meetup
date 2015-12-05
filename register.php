@@ -1,7 +1,7 @@
 <?php include("include.php"); ?>
 
 <?php
-	if(isset($_SESSION["username"])){
+	if(isset($username)){
 		// If already logged in cannot register
 		header("Location: index.php?attemptregister=true");
 	}
@@ -9,7 +9,7 @@
 	if(isset($_POST["username"])){
 	
 		// Check if username exists
-		if($_POST["username"] == "") $errors[] = "You must enter a username.";
+		if($_POST["username"] == "") $error[] = "You must enter a username.";
 		
 		if($stmt = $mysqli->prepare("SELECT username FROM member WHERE username=?")){
 			$stmt->bind_param("s", $_POST["username"]);
@@ -17,22 +17,22 @@
 			$stmt->bind_result($username_exists);
 			
 			if($stmt->fetch()){
-				$errors[] = "Username already exists.";
+				$error[] = "Username already exists.";
 			}
 			$stmt->close();
 		}
 		
-		if($_POST["password1"] == "" || $_POST["password2"] == "") $errors[] = "You must enter a password.";
-		else if($_POST["password1"] != $_POST["password2"]) $errors[] = "Password do not match.";
+		if($_POST["password1"] == "" || $_POST["password2"] == "") $error[] = "You must enter a password.";
+		else if($_POST["password1"] != $_POST["password2"]) $error[] = "Password do not match.";
 		
-		if($_POST["firstName"] == "") $errors[] = "You must enter a first name.";
-		if($_POST["lastName"] == "") $errors[] = "You must enter a last name.";
+		if($_POST["firstName"] == "") $error[] = "You must enter a first name.";
+		if($_POST["lastName"] == "") $error[] = "You must enter a last name.";
 		
 		$zipcode = intval($_POST["zipcode"]);
-		if($zipcode > 99999 || $zipcode < 1) $errors[] = "You must enter a valid 5-digit zipcode.";
+		if($zipcode > 99999 || $zipcode < 1) $error[] = "You must enter a valid 5-digit zipcode.";
 		
 		// If no errors, create user
-		if(empty($errors)){
+		if(empty($error)){
 			if($stmt = $mysqli->prepare("INSERT INTO member VALUES(?, ?, ?, ?, ?)")){
 				$stmt->bind_param("ssssi", $_POST["username"], md5($_POST["password1"]), $_POST["firstName"], $_POST["lastName"], $zipcode);
 				$stmt->execute();

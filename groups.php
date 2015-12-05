@@ -3,7 +3,7 @@
 <?php
 	$actions = "";
 	// If logged in, allow user to create new group
-	if(isset($_SESSION["username"])){
+	if(isset($username)){
 		$actions = '<div class="actions"><a href="creategroup.php">Create New Group</a></div>';
 	}
 	
@@ -42,7 +42,7 @@
 			
 			<?php
 				//if($stmt = $mysqli->prepare('SELECT g.group_id, g.group_name, g.description, g.username, count("SELECT * FROM groupuser WHERE g.group_id=g.group_id") num_members, groupinterest.interest_name FROM `group` g, groupinterest WHERE g.group_id=groupinterest.group_id')){
-				if($stmt = $mysqli->prepare("SELECT g.group_id, g.group_name, g.description, g.username, (SELECT count(*) FROM groupuser WHERE groupuser.group_id=g.group_id) num_members FROM `group` g")){
+				if($stmt = $mysqli->prepare("SELECT g.group_id, g.group_name, g.description, g.username, (SELECT count(*) FROM groupuser WHERE groupuser.group_id=g.group_id) num_members FROM `group` g ORDER BY num_members DESC")){
 					$stmt->execute();
 					$stmt->store_result();
 					$stmt->bind_result($group_id, $group_name, $group_description, $group_creator, $num_members);

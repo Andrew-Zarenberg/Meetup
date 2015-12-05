@@ -15,6 +15,7 @@
 			// If just created account
 			if(isset($_GET["newuser"])){
 				$success[] = "Account successfully created!";
+				$success[] = "Successfully logged in!";
 			} else if(isset($_GET["loggedin"])){
 				$success[] = "Successfully logged in!";
 			} else if(isset($_GET["loggedout"])){
@@ -27,7 +28,7 @@
 			
 			
 			// If user is signed in
-			if(isset($_SESSION["username"])){
+			if(isset($username)){
 			?>
 			
 			<div id="title">My Dashboard</div>
@@ -57,7 +58,7 @@
 					
 					<?php
 					if($stmt = $mysqli->prepare("SELECT g.group_id, g.group_name, g.description, g.username, (SELECT count(*) FROM groupuser WHERE groupuser.group_id=g.group_id) num_members FROM `group` g, groupuser WHERE g.group_id=groupuser.group_id AND groupuser.username=?")){
-						$stmt->bind_param("s",$_SESSION["username"]);
+						$stmt->bind_param("s",$username);
 						$stmt->execute();
 						$stmt->store_result();
 						$stmt->bind_result($group_id, $group_name, $group_description, $group_creator, $num_members);

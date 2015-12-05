@@ -26,7 +26,7 @@ $DAYS = array(-1, 31,        29,       31,      30,     31,   30,    31,    31, 
 				$auth_user = 0;
 				// Check if user is authorized
 				if($stmt = $mysqli->prepare("SELECT authorized FROM groupuser WHERE group_id=? AND username=?")){
-					$stmt->bind_param("is",$group_id, $_SESSION["username"]);
+					$stmt->bind_param("is",$group_id, $username);
 					$stmt->execute();
 					$stmt->bind_result($auth_user);
 					$stmt->fetch();

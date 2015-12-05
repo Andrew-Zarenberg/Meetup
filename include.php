@@ -17,6 +17,21 @@ if(isset($SESSION["REMOTE_ADDR"]) && $SESSION["REMOTE_ADDR"] != $SERVER["REMOTE_
 }
 
 
+// check session
+if(isset($_SESSION["username"])){
+	if($stmt = $mysqli->prepare("SELECT username FROM member WHERE username=?")){
+		$stmt->bind_param("s",$_SESSION["username"]);
+		$stmt->execute();
+		$stmt->bind_result($us);
+		if($stmt->fetch()){
+			$username = $us; // bind result so proper capitalization
+		}
+		$stmt->close();
+	}
+}
+		
+
+
 // Used to add error messages and display on pages
 $error = array();
 $success = array();

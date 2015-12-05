@@ -15,6 +15,7 @@
 			$stmt->bind_result($event_title, $event_description, $event_start, $event_end, $location_name, $location_description, $location_street, $location_city, $location_zipcode, $group_id, $group_name, $group_creator);
 			
 			$event = $stmt;
+			
 			if($event->fetch()){
 			
 				/*
@@ -29,12 +30,12 @@
 				// status bar
 				$status = "";
 				 
-				if(isset($_SESSION["username"])){
+				if(isset($username)){
 					
 					// check if user is in group (and then if authorized)
 					$group_member = false;					
 					if($stmt = $mysqli->prepare("SELECT authorized FROM groupuser WHERE group_id=? AND username=?")){
-						$stmt->bind_param("is", $group_id, $_SESSION["username"]);
+						$stmt->bind_param("is", $group_id, $username);
 						$stmt->execute();
 						$stmt->bind_result($g_authorized);
 						if($stmt->fetch()){
@@ -51,7 +52,7 @@
 							switch($_GET["action"]){
 								case "leave":								
 									if($stmt = $mysqli->prepare("DELETE FROM eventuser WHERE event_id=? AND username=?")){
-										$stmt->bind_param("is",$event_id,$_SESSION["username"]);
+										$stmt->bind_param("is",$event_id,$username);
 										$stmt->execute();
 										$stmt->close();
 										$success[] = "Successfully un-RSVP'd from event.";
@@ -63,12 +64,12 @@
 									// If user not in group, add user to group
 									if(!$group_member){		
 										$user_auth = 0;
-										if($group_creator == $_SESSION["username"]){
+										if($group_creator == $username){
 											$user_auth = 1;
 										}
 									
 										if($stmt = $mysqli->prepare("INSERT INTO groupuser VALUES(?, ?, ?)")){
-											$stmt->bind_param("isi",$group_id, $_SESSION["username"], $user_auth);
+											$stmt->bind_param("isi",$group_id, $username, $user_auth);
 											$stmt->execute();
 											$stmt->close();
 											
@@ -80,7 +81,7 @@
 									
 									
 									if($stmt = $mysqli->prepare("INSERT INTO eventuser VALUES(?, ?, 1, 0)")){
-										$stmt->bind_param("is",$event_id, $_SESSION["username"]);
+										$stmt->bind_param("is",$event_id, $username);
 										$stmt->execute();
 										$stmt->close();
 										$success[] = "Successfully RSVP'd to event.";
@@ -97,7 +98,7 @@
 					// find out if user is rsvp
 					if($group_member){
 						if($stmt = $mysqli->prepare("SELECT rsvp FROM eventuser WHERE username=? AND event_id=? AND rsvp=1")){
-							$stmt->bind_param("si",$_SESSION["username"],$event_id);
+							$stmt->bind_param("si",$username,$event_id);
 							$stmt->execute();
 							if($stmt->fetch()){
 								$status .= '<span class="status_member">RSVP\'d</span>';

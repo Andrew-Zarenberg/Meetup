@@ -11,8 +11,8 @@
 	
 	<td>
 	<?php
-		if(isset($_SESSION["username"])){
-			echo "Logged in as <strong>".$_SESSION["username"]."</strong>";
+		if(isset($username)){
+			echo "Logged in as <strong>".$username."</strong>";
 		} else {
 			echo "You are not logged in";
 		}
@@ -34,7 +34,7 @@
 		<a href="events.php">List of Events</a> |
 		<a href="interests.php">List of Interests</a> | 
 		
-		<?php if(isset($_SESSION["username"])){ ?>
+		<?php if(isset($username)){ ?>
 			<a href="user.php">My Profile</a> | 
 			<a href="logout.php">Log Out</a>
 		<?php } else { ?>

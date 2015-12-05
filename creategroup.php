@@ -2,7 +2,7 @@
 
 <?php
 	$actions = '<div class="actions"><a href="groups.php">Back to List of Groups</a></div>';
-	if(isset($_SESSION["username"])){
+	if(isset($username)){
 		if(isset($_POST["name"])){
 			
 			if($_POST["name"] == "") $error[] = "You must enter a group name.";
@@ -10,7 +10,7 @@
 			
 			// create group
 			if($stmt = $mysqli->prepare("INSERT INTO `group` (group_name, description, username) VALUES(?,?,?)")){
-				$stmt->bind_param("sss", $_POST["name"], $_POST["description"], $_SESSION["username"]);
+				$stmt->bind_param("sss", $_POST["name"], $_POST["description"], $username);
 				$stmt->execute();
 				$stmt->close();
 				
@@ -45,7 +45,7 @@
 						//$stmt->close();
 						// Add used to newly created group - make authorized
 						if($stmt = $mysqli->prepare("INSERT INTO groupuser VALUES(?,?,1)")){
-							$stmt->bind_param("is", $group_id, $_SESSION["username"]);
+							$stmt->bind_param("is", $group_id, $username);
 							$stmt->execute();
 							$stmt->close();
 							

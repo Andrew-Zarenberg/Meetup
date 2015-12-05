@@ -28,7 +28,7 @@
 						case "leave":
 							// Leaving a group will un-RSVP from ALL events in the group (since only group members may RSVP)
 							if($stmt = $mysqli->prepare("DELETE FROM groupuser WHERE group_id=? AND username=?")){
-								$stmt->bind_param("is",$group_id, $_SESSION["username"]);
+								$stmt->bind_param("is",$group_id, $username);
 								$stmt->execute();
 								$stmt->close();
 								
@@ -51,7 +51,7 @@
 										// I know SELECT is not necessary to delete entries from eventuser, but to display
 										// feedback messages to user it is necessary.  Let user know each event they are now un-RSVP'd from
 										if($stmt = $mysqli->prepare("SELECT event_id FROM eventuser WHERE event_id=? AND username=?")){
-											$stmt->bind_param("is", $event_id, $_SESSION["username"]);
+											$stmt->bind_param("is", $event_id, $username);
 											$stmt->execute();
 											if($stmt->fetch()){
 												$success[] = "Un-RSVP'd from event: ".$event_name.".";
@@ -60,7 +60,7 @@
 										}
 									
 										if($stmt = $mysqli->prepare("DELETE FROM eventuser WHERE event_id=? AND username=?")){
-											$stmt->bind_param("is", $event_id, $_SESSION["username"]);
+											$stmt->bind_param("is", $event_id, $username);
 											$stmt->execute();
 											$stmt->close();
 										}
@@ -76,12 +76,12 @@
 						case "join":
 						
 							$user_auth = 0;
-							if($group_creator == $_SESSION["username"]){
+							if($group_creator == $username){
 								$user_auth = 1;
 							}
 						
 							if($stmt = $mysqli->prepare("INSERT INTO groupuser VALUES(?, ?, ?)")){
-								$stmt->bind_param("isi",$group_id, $_SESSION["username"], $user_auth);
+								$stmt->bind_param("isi",$group_id, $username, $user_auth);
 								$stmt->execute();
 								$stmt->close();
 								
@@ -94,7 +94,7 @@
 							
 						case "delete":
 							// Only group creator may delete a group
-							if($_SESSION["username"] == $group_creator){
+							if($username == $group_creator){
 								
 								// First delete all group interests
 								if($stmt = $mysqli->prepare("DELETE FROM groupinterest WHERE group_id=?")){
@@ -154,9 +154,9 @@
 				$status = "";
 				
 				// find out if user is authorized
-				if(isset($_SESSION["username"])){
+				if(isset($username)){
 					if($stmt = $mysqli->prepare("SELECT authorized FROM groupuser WHERE group_id=? AND username=?")){
-						$stmt->bind_param("is",$group_id,$_SESSION["username"]);
+						$stmt->bind_param("is",$group_id,$username);
 						$stmt->execute();
 						$stmt->bind_result($auth);
 						if($stmt->fetch()){
@@ -165,7 +165,7 @@
 								//$actions .= ' | <a href="createevent.php?id='.$group_id.'">Create New Event</a>';
 								$auth_actions .= '<a href="editgroup.php?id='.$group_id.'">Edit Group</a> | <a href="createevent.php?id='.$group_id.'">Create New Event</a>';
 								
-								if($_SESSION["username"] == $group_creator) $auth_actions .= ' | <a href="group.php?id='.$group_id.'&action=delete" class="bad">Delete Group</a>';
+								if($username == $group_creator) $auth_actions .= ' | <a href="group.php?id='.$group_id.'&action=delete" class="bad">Delete Group</a>';
 								$status .= '<span class="status_authorized">Authorized User</span>';
 							}
 							$actions .= ' | <a href="group.php?id='.$group_id.'&action=leave" class="bad">Leave Group</a>';

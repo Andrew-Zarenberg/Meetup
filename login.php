@@ -1,7 +1,7 @@
 <?php include("include.php"); ?>
 
 <?php
-	if(isset($_SESSION["username"])){
+	if(isset($username)){
 		// If already logged in cannot login again
 		header("Location: index.php?attemptlogin=true");
 	}
@@ -9,7 +9,7 @@
 	
 	if(isset($_POST["username"])){
 		if($stmt = $mysqli->prepare("SELECT username FROM member WHERE username=? AND password=?")){
-			$pass = substr(md5($_POST["password"]),0, 20);
+			$pass = md5($_POST["password"]);
 			$stmt->bind_param("ss", $_POST["username"], $pass);
 			
 			$stmt->execute();
