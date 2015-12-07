@@ -91,21 +91,21 @@
 		</table><br />
 		
 		<table cellspacing="0">
-			<tr><th class="table_header" id="tab_events">7. events.php (List of Events)</th></tr>
+			<tr><th class="table_header" id="tab_createannouncement">3. createannouncement.php (Create Announcement)</th></tr>
 			<tr><td>
 			
 			</tr></td>
 		</table><br />
 		
 		<table cellspacing="0">
-			<tr><th class="table_header" id="tab_events">7. events.php (List of Events)</th></tr>
+			<tr><th class="table_header" id="tab_createevent">4. createevent.php (Create Event)</th></tr>
 			<tr><td>
 			
 			</tr></td>
 		</table><br />
 		
 		<table cellspacing="0">
-			<tr><th class="table_header" id="tab_events">7. events.php (List of Events)</th></tr>
+			<tr><th class="table_header" id="tab_creategroup">5. creategroup.php (Create Group)</th></tr>
 			<tr><td>
 			
 			</tr></td>
@@ -159,6 +159,20 @@
 			</tr></td>
 		</table><br />
 		
+		<table cellspacing="0">
+			<tr><th class="table_header" id="tab_header">10. header.php</th></tr>
+			<tr><td>
+			
+			</tr></td>
+		</table><br />
+		
+		<table cellspacing="0">
+			<tr><th class="table_header" id="tab_include">11. include.php</th></tr>
+			<tr><td>
+			
+			</tr></td>
+		</table><br />
+		
 		
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_index">12. index.php (Index Page)</th></tr>
@@ -184,6 +198,41 @@
 			<tr><td>
 				Anyone may view a list of all interests.<br /><br />
 				For each interest, the interest name, number of groups with that interest, and number of members with that interest are shown.  A link is provided to go to the specific <a href="#tabInterestPage">Interest Page</a>.
+			</tr></td>
+		</table><br />
+		
+		<table cellspacing="0">
+			<tr><th class="table_header" id="tab_login">15. login.php (Login)</th></tr>
+			<tr><td>
+			
+			</tr></td>
+		</table><br />
+		
+		<table cellspacing="0">
+			<tr><th class="table_header" id="tab_logout">16. logout.php (Logout)</th></tr>
+			<tr><td>
+			
+			</tr></td>
+		</table><br />
+		
+		<table cellspacing="0">
+			<tr><th class="table_header" id="tab_readme">17. readme.php (README)</th></tr>
+			<tr><td>
+			
+			</tr></td>
+		</table><br />
+		
+		<table cellspacing="0">
+			<tr><th class="table_header" id="tab_register">18. register.php (Register New Account)</th></tr>
+			<tr><td>
+			
+			</tr></td>
+		</table><br />
+		
+		<table cellspacing="0">
+			<tr><th class="table_header" id="tab_search">19. search.php (Search Results Page)</th></tr>
+			<tr><td>
+			
 			</tr></td>
 		</table><br />
 		
