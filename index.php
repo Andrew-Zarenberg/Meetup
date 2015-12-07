@@ -106,37 +106,35 @@
 						<th colspan="5" class="table_header">My Events in the next 3 days</th>
 					</tr>
 					
-					<tr>
-						<th colspan="5"><a href="events.php">Browse All Events</a></th>
-					</tr>
-					
-					<tr>
-						<th>Name</th>
-						<th>Host</th>
-						<th>Start / End</th>
-						<th>Location</th>
-						<th>RSVPs</th>
-					</tr>
 					
 					<?php
 						if($stmt = $mysqli->prepare("SELECT e.event_id, e.title, e.description, e.start_time, e.end_time, e.group_id, g.group_name, e.lname, e.zip, l.street, l.city, (SELECT count(*) FROM eventuser WHERE eventuser.event_id=e.event_id) num_rsvp FROM `event` e, `group` g, location l, eventuser ev WHERE e.group_id=g.group_id AND e.lname=l.lname AND e.zip=l.zip AND e.event_id=ev.event_id AND ev.username=? ORDER BY e.start_time")){
 							$stmt->bind_param("s",$username);
 							$stmt->execute();
+							$stmt->store_result();
 							$stmt->bind_result($event_id, $event_title, $event_description, $event_start_time, $event_end_time, $group_id, $group_name, $location_name, $location_zipcode, $location_street, $location_city, $num_rsvp);
 					
 							$event = $stmt;
-							while($event->fetch()){
 							
-								// Because time, have to do check with PHP and not in SQL
-								$ts = (new Datetime($event_start_time))->getTimestamp();
-								if(time() > $ts || time()+60*60*24*3 < $ts) continue;
+							if($event->num_rows == 0){
+								echo '<tr><th colspan="5">You have not RSVP\'d for any events!<br />Why don\'t you <a href="events.php">browse all events</a> to find one?</th></tr>';
+							} else {
+								echo '<tr><th colspan="5"><a href="events.php">Browse All Events</a></th></tr><tr><th>Name</th><th>Host</th><th>Start / End</th><th>Location</th><th>RSVPs</th></tr>';
+									
 								
-								echo '<tr><td class="group_info"><div class="group_name"><a href="event.php?id='.$event_id.'">'.$event_title.'</a></div><div class="group_description">'.$event_description.'</div></td>';
-								echo '<td><a href="group.php?id='.$group_id.'">'.$group_name.'</a></td>';
-								echo '<td>'.(new Datetime($event_start_time))->format($EVENT_DATE_FORMAT).'<br />'.(new Datetime($event_end_time))->format($EVENT_DATE_FORMAT).'</td>';
-								echo '<td><div><a href="location.php?name='.$location_name.'&zipcode='.$location_zipcode.'">'.$location_name.'</a></div><div>'.$location_street.' '.$location_zipcode.', '.$location_city.'</div></td>';
-								echo '<td class="num">'.$num_rsvp.'</td>';
-								echo '</tr>';
+								while($event->fetch()){
+								
+									// Because time, have to do check with PHP and not in SQL
+									$ts = (new Datetime($event_start_time))->getTimestamp();
+									if(time() > $ts || time()+60*60*24*3 < $ts) continue;
+									
+									echo '<tr><td class="group_info"><div class="group_name"><a href="event.php?id='.$event_id.'">'.$event_title.'</a></div><div class="group_description">'.$event_description.'</div></td>';
+									echo '<td><a href="group.php?id='.$group_id.'">'.$group_name.'</a></td>';
+									echo '<td>'.(new Datetime($event_start_time))->format($EVENT_DATE_FORMAT).'<br />'.(new Datetime($event_end_time))->format($EVENT_DATE_FORMAT).'</td>';
+									echo '<td><div><a href="location.php?name='.$location_name.'&zipcode='.$location_zipcode.'">'.$location_name.'</a></div><div>'.$location_street.' '.$location_zipcode.', '.$location_city.'</div></td>';
+									echo '<td class="num">'.$num_rsvp.'</td>';
+									echo '</tr>';
+								}
 							}
 							$event->close();
 						}

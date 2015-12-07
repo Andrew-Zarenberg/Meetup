@@ -174,6 +174,34 @@
 							} else $error[] = "You do not have permission to perform that action.";
 							break;
 							
+						case "delannounce":
+							$a_id = intval($_GET["a_id"]);
+							
+							// If group creator allow to delete - if not check if user created announcement
+							$can_delete = false;
+							if($group_creator == $username) $can_delete = true;
+							else {
+								if($stmt = $mysqli->prepare("SELECT announcement_id FROM groupannouncement WHERE announcement_id=? AND username=?")){
+									$stmt->bind_param("is",$a_id,$username);
+									$stmt->execute();
+									if($stmt->fetch()){
+										$can_delete = true;
+									}
+									$stmt->close();
+								}
+							}
+							
+							if($can_delete){
+								if($stmt = $mysqli->prepare("DELETE FROM groupannouncement WHERE announcement_id=?")){
+									$stmt->bind_param("i",$a_id);
+									$stmt->execute();
+									
+									$success[] = "Successfully deleted announcement.";
+								} else echo 'error';
+							} else $error[] = "You do not have permission to perform that action.";
+							
+							break;
+							
 					}
 				}
 				 
@@ -354,11 +382,11 @@
 						
 						while($stmt->fetch()){
 							echo '<tr><th class="username">'.$a_username.'</th>';
-							echo '<td rowspan="2"><div>Posted on: <strong>'.(new Datetime($a_date))->format($EVENT_DATE_FORMAT).'</strong></div><br />'.nl2br($a_content).'</td>';
+							echo '<td rowspan="2"><div style="font-size:25px;">'.$a_title.'</div><div>Posted on: <strong>'.(new Datetime($a_date))->format($EVENT_DATE_FORMAT).'</strong></div><br />'.nl2br($a_content).'</td>';
 							echo '<tr><td class="actions" style="text-align:center;">';
 							
 							// ONLY group creator AND announcement creator have ability to delete
-							if($group_creator == $username || $a_username == $username){
+							if(isset($username) && ($group_creator == $username || $a_username == $username)){
 								echo '<a href="group.php?id='.$group_id.'&action=delannounce&a_id='.$a_id.'">Delete</a>';
 							}
 							
