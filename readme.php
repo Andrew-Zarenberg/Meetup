@@ -97,10 +97,10 @@
 				Users that are logged in will have a link to join the group, or if they are already a member of the group a link to leave the group.  Clicking the leave group button will prompt the user with a pop-up confirming that they wish to leave.<br /><br />
 				
 				<strong>If authorized user:</strong><br />
-				Authorized users will have an <em>Authorized User Actions</em> bar at the top that gives them the ability to create a new event and to edit the group.  Clicking the edit group link takes the authorized user to a page where they may change the group name, description, and interests.<br /><br />
+				Authorized users will have a link in at the top and bottom of the page that allows them to create a new event and to edit the group.  Clicking the edit group link takes the authorized user to a page where they may change the group name, description, and interests.<br /><br />
 				
 				<strong>If group creator:</strong><br />
-				In the <em>Authorized User Actions</em> bar, only the group creator will have the ability to delete the group.  Deleting the group will delete entries from multiple SQL tables, deleting all interest entries, user memberships, RSVPs to events, events, and lastly delete its entry in the group table.
+				Only the group creator will have a special <em>Group Creator Actions</em> bar, which allows them to delete the group.  Deleting the group will delete entries from multiple SQL tables, deleting all interest entries, user memberships, RSVPs to events, events, and lastly delete its entry in the group table.
 			</tr></td>
 		</table><br />
 		
@@ -114,8 +114,8 @@
 				Users who are not a member of the host group will be provided with a link to join the group and RSVP to the event simultaneously.<br />
 				Users who are a member of the host group will be provided with a link to RSVP to the event, or if they are already RSVP'd, a link to un-RSVP.<br /><br />
 				
-				<strong>If authorized user:</strong>
-				Authorized users will have an <em>Authorized User Actions</em> bar that allows them to delete the event.  Upon clicking the delete event link, a pop-up will ask the authorized user if they are sure they wish to delete the event.  If confirmed, the code first deletes all member RSVPs to the event, then deletes the event itself.
+				<strong>If group creator:</strong>
+				Only the group creator will have a special <em>Group Creator Actions</em> bar that allows them to delete the event.  Upon clicking the delete event link, a pop-up will ask the authorized user if they are sure they wish to delete the event.  If confirmed, the code first deletes all member RSVPs to the event, then deletes the event itself.
 			
 			</tr></td>
 		</table><br />

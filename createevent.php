@@ -76,11 +76,28 @@ $DAYS = array(-1, 31,        29,       31,      30,     31,   30,    31,    31, 
 						
 						
 						// Verify event location
-						if(strlen($_POST["location"]) < 6) $error[] = "Invalid Location";
-						else {
-							$location_zipcode = substr($_POST["location"],0,5);
-							$location_name = substr($_POST["location"],5);
-													
+						// if other, create new location
+						if($_POST["location"] == "other"){
+						
+							if($_POST["loc_name"] == "") $error[] = "[Location] You must specify a location name";
+							// Assume location description is optional
+							if($_POST["loc_street"] == "") $error[] = "[Location] You must specify a street address";
+							if($_POST["loc_city"] == "") $error[] = "[Location] You must specify a city";
+							if($_POST["loc_zip"] == "") $error[] = "[Location] You must specify a zipcode";
+							else {
+								$zipcode = intval($_POST["loc_zip"]);
+								if($zipcode > 99999 || $zipcode < 1) $error[] = "[Location] You must specify a valid 5-digit zipcode.";
+							}
+							if($_POST["loc_latitude"] == "") $error[] = "[Location] You must specify a latitude";
+							if($_POST["loc_longitude"] == "") $error[] = "[Location] You must specify a longitude";
+						
+						} else {
+							if(strlen($_POST["location"]) < 6) $error[] = "Invalid Location";
+							else {
+								$location_zipcode = substr($_POST["location"],0,5);
+								$location_name = substr($_POST["location"],5);
+														
+							}
 						}
 						
 						// If no errors, begin adding event
@@ -254,12 +271,14 @@ $DAYS = array(-1, 31,        29,       31,      30,     31,   30,    31,    31, 
 									$stmt->bind_result($location_name, $location_zipcode, $location_city);
 									
 									while($stmt->fetch()){
-										echo '<option value="'.$location_zipcode.$location_name.'">'.$location_name.' - '.$location_zipcode.', '.$location_city.'</option>';
+										echo '<option value="'.$location_zipcode.$location_name.'"';
+										if(isset($_POST["location"]) && $_POST["location"] == $location_zipcode.$location_name) echo ' selected';
+										echo '>'.$location_name.' - '.$location_zipcode.', '.$location_city.'</option>';
 									}
 								}	
 							
 							?>
-							<option value="other">Add New Location...</option>
+							<option value="other"<?php if(isset($_POST["location"]) && $_POST["location"] == "other") echo ' selected'; ?>>Add New Location...</option>
 							
 						</select>
 					</td>
@@ -267,17 +286,17 @@ $DAYS = array(-1, 31,        29,       31,      30,     31,   30,    31,    31, 
 				
 				<tr class="location_row">
 					<th>Location Name</th>
-					<td><input name="loc_name" size="20" maxlength="20" /></td>
+					<td><input name="loc_name" size="20" maxlength="20" <?php if(isset($_POST["loc_name"])) echo 'value="'.$_POST["loc_name"].'" '; ?>/></td>
 				</tr>
 				
 				<tr class="location_row">
 					<th>Location Description</th>
-					<td><textarea name="loc_description" style="width:100%;" rows="5"></textarea></td>
+					<td><textarea name="loc_description" style="width:100%;" rows="5"><?php if(isset($_POST["loc_description"])) echo $_POST["loc_description"]; ?></textarea></td>
 				</tr>
 				
 				<tr class="location_row">
 					<th>Location Street Address</th>
-					<td><input name="loc_street" size="30" maxlength="50" /></td>
+					<td><input name="loc_street" size="30" maxlength="50" <?php if(isset($_POST["loc_street"])) echo 'value="'.$_POST["loc_street"].'" '; ?>/></td>
 				</tr>
 				
 				<tr class="location_row">
@@ -329,7 +348,7 @@ $DAYS = array(-1, 31,        29,       31,      30,     31,   30,    31,    31, 
 				}
 			}
 			
-			setLocationRows("none");
+			<?php if(!isset($_POST["location"]) || $_POST["location"] != "other") echo 'setLocationRows("none");'; ?>
 		</script>
 		
 		<?php include("body_footer.php"); ?>

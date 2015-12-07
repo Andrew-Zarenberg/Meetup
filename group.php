@@ -17,6 +17,8 @@
 			$group = $stmt;
 			if($group->fetch()){
 			
+				if(isset($_GET["eventdel"]) && $_GET["eventdel"] == "true") $success[] = "Event successfully deleted.";
+			
 				/*
 				 * START IF GROUP FOUND
 				 */
@@ -139,6 +141,38 @@
 							break;
 							
 							
+						// Authorize user - GROUP CREATOR ONLY
+						case "auth": 
+							if($group_creator == $username){
+								if(!isset($_POST["user"]) || $_POST["user"] == $username) $error[] = "Invalid input";
+								else {
+									
+									if($stmt = $mysqli->prepare("UPDATE groupuser SET authorized=1 WHERE username=?")){
+										$stmt->bind_param("s",$_POST["user"]);
+										$stmt->execute();
+									}
+									
+									$success[] = "Successfully authorized user.";
+								}
+							} else $error[] = "You do not have permission to perform that action.";
+							break;
+							
+						// UN-Authorize user - GROUP CREATOR ONLY
+						case "unauth": 
+							if($group_creator == $username){
+								if(!isset($_POST["user"]) || $_POST["user"] == $username) $error[] = "Invalid input";
+								else {
+									
+									if($stmt = $mysqli->prepare("UPDATE groupuser SET authorized=0 WHERE username=?")){
+										$stmt->bind_param("s",$_POST["user"]);
+										$stmt->execute();
+									}
+									
+									$success[] = "Successfully un-authorized user.";
+								}
+							} else $error[] = "You do not have permission to perform that action.";
+							break;
+							
 					}
 				}
 				 
@@ -155,22 +189,61 @@
 				
 				// find out if user is authorized
 				if(isset($username)){
+				
+				
 					if($stmt = $mysqli->prepare("SELECT authorized FROM groupuser WHERE group_id=? AND username=?")){
 						$stmt->bind_param("is",$group_id,$username);
 						$stmt->execute();
+						$stmt->store_result();
 						$stmt->bind_result($auth);
-						if($stmt->fetch()){
+						
+						$authorized_user = $stmt;
+						if($authorized_user->fetch()){
+						
 							$status .= '<span class="status_member">Group Member</span>';
 							if($auth == 1){
-								//$actions .= ' | <a href="createevent.php?id='.$group_id.'">Create New Event</a>';
-								$auth_actions .= '<a href="editgroup.php?id='.$group_id.'">Edit Group</a> | <a href="createevent.php?id='.$group_id.'">Create New Event</a>';
+								$actions .= ' | <a href="createevent.php?id='.$group_id.'" class="good">Create New Event</a>';
+								//$auth_actions .= '<a href="editgroup.php?id='.$group_id.'">Edit Group</a> | ';
+								//$auth_actions .= '<a href="createevent.php?id='.$group_id.'">Create New Event</a>';
 								
-								if($username == $group_creator) $auth_actions .= ' | <a href="group.php?id='.$group_id.'&action=delete" class="bad">Delete Group</a>';
+								if($username == $group_creator){
+									// For auth/unauth use $username as default value to ensure no false negatives - never will apply action to group creator
+								
+									$auth_actions .= '<a href="group.php?id='.$group_id.'&action=delete" class="bad">Delete Group</a>';
+									
+									$auth_actions .= '<br /><br /><form action="group.php?id='.$group_id.'&action=auth" method="post">Authorized Group Member: <select name="user"><option value="'.$username.'">Select a Member...</option>';
+									if($stmt = $mysqli->prepare("SELECT username FROM groupuser WHERE group_id=? AND authorized=0 ORDER BY username")){
+										$stmt->bind_param("i",$group_id);
+										$stmt->execute();
+										$stmt->bind_result($user);
+										while($stmt->fetch()){
+											$auth_actions .= '<option value="'.$user.'">'.$user.'</option>';
+										}
+										$stmt->close();
+									}
+									
+									$auth_actions .= '</select> <input type="submit" value="Authorize User" /></form>';
+									
+									
+									// UNAUTHORIZE
+									$auth_actions .= '<form action="group.php?id='.$group_id.'&action=unauth" method="post">Un-authorize Group Member: <select name="user"><option value="'.$username.'">Select a Member...</option>';
+									if($stmt = $mysqli->prepare("SELECT username FROM groupuser WHERE group_id=? AND authorized=1 AND username!=? ORDER BY username")){
+										$stmt->bind_param("is",$group_id,$username);
+										$stmt->execute();
+										$stmt->bind_result($user);
+										while($stmt->fetch()){
+											$auth_actions .= '<option value="'.$user.'">'.$user.'</option>';
+										}
+										$stmt->close();
+									}
+									
+									$auth_actions .= '</select> <input type="submit" value="Un-Authorize User" /></form>';
+								}
 								$status .= '<span class="status_authorized">Authorized User</span>';
 							}
 							$actions .= ' | <a href="group.php?id='.$group_id.'&action=leave" class="bad">Leave Group</a>';
 						} else $actions .= ' | <a href="group.php?id='.$group_id.'&action=join" class="good">Join Group</a>';
-						$stmt->close();
+						$authorized_user->close();
 					}
 				}
 				
@@ -198,7 +271,7 @@
 			print_errors($error, $success); 
 			
 			if($auth_actions != ""){
-				echo '<div class="auth_actions"><div style="font-weight:bold;">Authorized User Actions:</div>'.$auth_actions.'</div>';
+				echo '<div class="auth_actions"><div style="font-weight:bold;">Group Creator Actions:</div>'.$auth_actions.'</div>';
 			}
 			
 			echo $actions; 

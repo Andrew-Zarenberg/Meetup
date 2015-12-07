@@ -87,6 +87,27 @@
 										$success[] = "Successfully RSVP'd to event.";
 									}
 									break;
+									
+								case "del":
+									if($group_creator == $username){ // group creator can delete events only
+									
+										// first delete all RSVPs
+										if($stmt = $mysqli->prepare("DELETE FROM eventuser WHERE event_id=?")){
+											$stmt->bind_param("i",$event_id);
+											$stmt->execute();
+											$stmt->close();
+										}
+										
+										// next delete the event
+										if($stmt = $mysqli->prepare("DELETE FROM event WHERE event_id=?")){
+											$stmt->bind_param("i",$event_id);
+											$stmt->execute();
+											$stmt->close();
+										}
+										
+										header("Location: group.php?id=".$group_id."&eventdel=true");
+									}
+									break;
 							
 							}
 						//} else {
@@ -116,7 +137,7 @@
 				
 				$actions .= '</div>';
 				
-				if($group_authorized){
+				if($group_creator == $username){
 					$auth_actions .= '<a href="event.php?id='.$event_id.'&action=del" class="bad">Delete Event</a>';
 				}
 			?>
@@ -145,7 +166,7 @@
 			print_errors($error, $success); 
 			
 			if($auth_actions != ""){
-				echo '<div class="auth_actions"><div style="font-weight:bold;">Authorized User Actions:</div>'.$auth_actions.'</div>';
+				echo '<div class="auth_actions"><div style="font-weight:bold;">Group Creator Actions:</div>'.$auth_actions.'</div>';
 			}
 			
 			echo $actions;
@@ -213,7 +234,7 @@
 	} else $invalid = 1;
 	
 	
-	if($invalid == 1){ 
+	if(isset($invalid) && $invalid == 1){ 
 	
 		$actions = '<div class="actions"><a href="events.php">Back to List of Events</a></div>';
 	?>
