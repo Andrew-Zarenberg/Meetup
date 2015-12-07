@@ -37,6 +37,70 @@
 			
 			<!--<div id="main_box">-->
 			
+			
+
+				<table cellspacing="0">
+					<tr>
+						<th colspan="3" class="table_header">Check Out These Groups!</th>
+					</tr>
+					
+					<tr>
+						<th>Top 3 Groups</th>
+						<th>Bottom 3 Groups</th>
+						<th>Random 3 Groups</th>
+					</tr>
+					
+					<tr>
+						<td style="width:33%;vertical-align:top">
+							<div>These are the most popular groups, perhaps you should see what all the fuss is about!</div>
+						
+						<?php
+							if($stmt = $mysqli->prepare("SELECT g.group_id, g.group_name, (SELECT count(*) FROM groupuser WHERE groupuser.group_id=g.group_id) num_members FROM `group` g ORDER BY num_members DESC LIMIT 3")){
+								$stmt->execute();
+								$stmt->bind_result($group_id, $group_name, $num_members);
+								while($stmt->fetch()){
+									echo '<div><a href="group.php?id='.$group_id.'">'.$group_name.'</a> - <strong>'.$num_members.'</strong> members</div>';
+								}
+							}
+						?>
+						
+						</td>
+						
+						<td style="width:34%;vertical-align:top">
+							<div>Show these groups some love and see what they have to offer!</div>
+							
+						<?php
+							if($stmt = $mysqli->prepare("SELECT g.group_id, g.group_name, (SELECT count(*) FROM groupuser WHERE groupuser.group_id=g.group_id) num_members FROM `group` g ORDER BY num_members LIMIT 3")){
+								$stmt->execute();
+								$stmt->bind_result($group_id, $group_name, $num_members);
+								while($stmt->fetch()){
+									echo '<div><a href="group.php?id='.$group_id.'">'.$group_name.'</a> - <strong>'.$num_members.'</strong> members</div>';
+								}
+							}
+						?>
+						</td>
+						
+						<td style="width:33%;vertical-align:top;">
+							<div>Perhaps one of these groups will capture your interest?</div>
+							
+						<?php
+							// For random, make sure user is NOT in that group
+							if($stmt = $mysqli->prepare("SELECT g.group_id, g.group_name, (SELECT count(*) FROM groupuser WHERE groupuser.group_id=g.group_id) num_members FROM `group` g WHERE ? NOT IN (SELECT username FROM groupuser WHERE groupuser.group_id=g.group_id) ORDER BY RAND() DESC LIMIT 3")){
+								$stmt->bind_param("s",$username);
+								$stmt->execute();
+								$stmt->bind_result($group_id, $group_name, $num_members);
+								while($stmt->fetch()){
+									echo '<div><a href="group.php?id='.$group_id.'">'.$group_name.'</a> - <strong>'.$num_members.'</strong> members</div>';
+								}
+							}
+						?>
+						</td>
+						
+					</tr>
+				</table><br />
+			
+			
+			
 				<table cellspacing="0">
 					<tr>
 						<th colspan="5" class="table_header">My Events in the next 3 days</th>
