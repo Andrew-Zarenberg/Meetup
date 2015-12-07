@@ -79,35 +79,37 @@
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_body_footer">1. body_footer.php</th></tr>
 			<tr><td>
-			
+				Included at the bottom of every page's body.  Generates HTML for the footer.
 			</tr></td>
 		</table><br />
 		
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_body_header">2. body_header.php</th></tr>
 			<tr><td>
-			
+				Included at the top of every page's body.  Generates HTML for the header, including displaying the user's username and links to navigate with.
 			</tr></td>
 		</table><br />
 		
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_createannouncement">3. createannouncement.php (Create Announcement)</th></tr>
 			<tr><td>
-			
+				Checks if the user is authorized for the group and then displays a form to create an announcement.  When submitted, creates an announcement for the group.
 			</tr></td>
 		</table><br />
 		
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_createevent">4. createevent.php (Create Event)</th></tr>
 			<tr><td>
-			
+				Checks if the user is authorized for the group and then displays a form to create a new event.  <br /><br />
+				In addition to event title and description, provides drop down menus for easy start and end date selections.  
+				Authorized user may select an existing location or create a new location for the event.
 			</tr></td>
 		</table><br />
 		
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_creategroup">5. creategroup.php (Create Group)</th></tr>
 			<tr><td>
-			
+				Any logged in user may create a group.  User enters a group name, description, and selects from a list of checkboxes which interests to apply to the group.  Upon submission verifies the inputs, creates a new group, then redirects the user to the group page.  The user is automatically added as an authorized user.
 			</tr></td>
 		</table><br />
 		
@@ -162,14 +164,14 @@
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_header">10. header.php</th></tr>
 			<tr><td>
-			
+				Included in the head tag in every page.  Mainly used for just outputting the CSS styling.
 			</tr></td>
 		</table><br />
 		
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_include">11. include.php</th></tr>
 			<tr><td>
-			
+				The absolute first thing included in every single file.  Connects to the database, verifies user session, and contains a few functions.
 			</tr></td>
 		</table><br />
 		
@@ -204,35 +206,36 @@
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_login">15. login.php (Login)</th></tr>
 			<tr><td>
-			
+				Presents a non-logged in user a form to enter their username and password.  When submitted, checks if it is a valid login, sets session variables, and redirects to the homepage.  If invalid login, generates error and prompts user to retry logging in.
 			</tr></td>
 		</table><br />
 		
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_logout">16. logout.php (Logout)</th></tr>
 			<tr><td>
-			
+				Logs out a user and redirects to homepage.
 			</tr></td>
 		</table><br />
 		
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_readme">17. readme.php (README)</th></tr>
 			<tr><td>
-			
+				Contains all of this information about each file and how to use Meetup that you are currently reading.
 			</tr></td>
 		</table><br />
 		
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_register">18. register.php (Register New Account)</th></tr>
 			<tr><td>
-			
+				Displays a form for a non-logged in user to create a new account.  Upon form submission, verifies that the username does not already exist, two passwords match, and checks for a valid 5-digit zipcode.
 			</tr></td>
 		</table><br />
 		
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_search">19. search.php (Search Results Page)</th></tr>
 			<tr><td>
-			
+				Upon submission of the search located at the top of every page, user will be brought to this page to display search results for groups and events.<br /><br />
+				Each match contains a match strength, which is either 5 stars, 4 stars, or 3 stars.  An <em>exact</em> match is 5 stars.  If the result <em>starts</em> or <em>ends</em> with the search, 4 stars.  If the result <em>contains</em> the search anywhere in the name, 3 stars.
 			</tr></td>
 		</table><br />
 		
