@@ -134,16 +134,26 @@ table.box, table.box td, table.box th {
 }
 
 
-div.auth_actions {
+
+div.creator_actions {
 	background:#5E610B;
 	border: 5px solid #D7DF01;
+}
+
+div.auth_actions {
+	background:#0B610B;
+	border: 5px solid #01DF01;
+}
+
+
+div.auth_actions, div.creator_actions {
 	color:white;
 	text-align:center;
 	padding:5px;
 	margin:10px 0;
 }
 
-div.auth_actions a {
+div.auth_actions a, div.creator_actions a {
 	color:white;
 }
 

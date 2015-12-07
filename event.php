@@ -166,7 +166,7 @@
 			print_errors($error, $success); 
 			
 			if($auth_actions != ""){
-				echo '<div class="auth_actions"><div style="font-weight:bold;">Group Creator Actions:</div>'.$auth_actions.'</div>';
+				echo '<div class="creator_actions"><div style="font-weight:bold;">Group Creator Actions:</div>'.$auth_actions.'</div>';
 			}
 			
 			echo $actions;
