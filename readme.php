@@ -132,7 +132,13 @@
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tab_events">7. events.php (List of Events)</th></tr>
 			<tr><td>
-			
+				Anyone may view a list of all events.<br /><br />
+				For each event, the event name, description, host group, start/end dates, location, and number of RSVPs is shown.  A link is provided to go to the specific <a href="#tab_event">Event Page</a>.  Events are ordered by start date.
+				<hr />
+				<code>
+				<strong>SQL query for fetching events:</strong><br />
+				SELECT e.event_id, e.title, e.description, e.start_time, e.end_time, e.group_id, g.group_name, e.lname, e.zip, l.street, l.city, (SELECT count(*) FROM eventuser WHERE eventuser.event_id=e.event_id) num_rsvp FROM `event` e, `group` g, location l WHERE e.group_id=g.group_id AND e.lname=l.lname AND e.zip=l.zip ORDER BY e.start_time
+				</code>
 			</tr></td>
 		</table><br />
 		
@@ -157,7 +163,12 @@
 			<tr><th class="table_header" id="tab_groups">9. groups.php (List of Groups)</th></tr>
 			<tr><td>
 				Anyone may view a list of all groups.<br /><br />
-				For each group, the group name, description, interests, number of members, and group creator is shown.  A link is provided to go to the specific <a href="#tabGroupPage">Group Page</a>.
+				For each group, the group name, description, interests, number of members, and group creator is shown.  A link is provided to go to the specific <a href="#tab_group">Group Page</a>.  Groups are ordered by number of members.
+				<hr />
+				<code>
+				<strong>SQL query for fetching groups:</strong><br />
+				SELECT g.group_id, g.group_name, g.description, g.username, (SELECT count(*) FROM groupuser WHERE groupuser.group_id=g.group_id) num_members FROM `group` g ORDER BY num_members DESC
+				</code>
 			</tr></td>
 		</table><br />
 		
@@ -236,6 +247,15 @@
 			<tr><td>
 				Upon submission of the search located at the top of every page, user will be brought to this page to display search results for groups and events.<br /><br />
 				Each match contains a match strength, which is either 5 stars, 4 stars, or 3 stars.  An <em>exact</em> match is 5 stars.  If the result <em>starts</em> or <em>ends</em> with the search, 4 stars.  If the result <em>contains</em> the search anywhere in the name, 3 stars.
+				<hr />
+				<code>
+				<strong>SQL query for groups</strong> (<em>? = search query</em>)<br />
+				SELECT strength, group_id, group_name, description, username, (SELECT count(*) FROM groupuser WHERE groupuser.group_id=results.group_id) num_members FROM ((SELECT *, 5 strength FROM `group` g WHERE g.group_name=?) UNION (SELECT *, 4 strength FROM `group` g WHERE g.group_name LIKE ? OR g.group_name LIKE ?) UNION (SELECT *, 3 strength FROM `group` g WHERE g.group_name LIKE ?)) results GROUP BY group_id ORDER BY strength DESC
+				
+				<br /><br />
+				<strong>SQL query for events</strong> (<em>? = search query</em>)<br />
+				SELECT strength, e.event_id, e.title, e.description, e.start_time, e.end_time, e.group_id, g.group_name, e.lname, e.zip, l.street, l.city, (SELECT count(*) FROM eventuser WHERE eventuser.event_id=e.event_id) num_rsvp FROM ((SELECT *, 5 strength FROM `event` e WHERE e.title=?) UNION (SELECT *, 4 strength FROM `event` e WHERE e.title LIKE ? OR e.title LIKE ?) UNION (SELECT *, 3 strength FROM `event` e WHERE e.title LIKE ?)) e, `group` g, location l WHERE e.group_id=g.group_id AND e.lname=l.lname AND e.zip=l.zip GROUP BY event_id ORDER BY strength DESC
+				</code>
 			</tr></td>
 		</table><br />
 		
