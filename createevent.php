@@ -35,7 +35,7 @@ $DAYS = array(-1, 31,        29,       31,      30,     31,   30,    31,    31, 
 			
 				if($auth_user == 1){
 				
-					$actions = '<div class="actions"><a href="group.php?id='.$group_id.'">Back to Group: '.$group_name.'</a></div>';
+					$actions = '<div class="actions"><a href="group.php?id='.$group_id.'">Back to Group: '.htmlentities($group_name).'</a></div>';
 				
 					// If submitted
 					if(isset($_POST["name"])){
@@ -161,7 +161,7 @@ $DAYS = array(-1, 31,        29,       31,      30,     31,   30,    31,    31, 
 			
 				<tr>
 					<th>Group</th>
-					<td><?php echo $group_name; ?>
+					<td><?php echo htmlentities($group_name); ?>
 				</tr>
 				
 				<tr>

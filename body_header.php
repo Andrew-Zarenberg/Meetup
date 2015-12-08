@@ -12,7 +12,7 @@
 	<td>
 	<?php
 		if(isset($username)){
-			echo "Logged in as <strong>".$username."</strong>";
+			echo "Logged in as <strong>".htmlentities($username)."</strong>";
 		} else {
 			echo "You are not logged in";
 		}

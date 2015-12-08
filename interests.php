@@ -28,7 +28,7 @@
 					$stmt->execute();
 					$stmt->bind_result($interest_name);
 					while($stmt->fetch()){
-						echo '<tr><td><a href="interest.php?name='.$interest_name.'">'.$interest_name.'</a></td><td>#</td><td>#</td></tr>';
+						echo '<tr><td><a href="interest.php?name='.htmlentities($interest_name).'">'.htmlentities($interest_name).'</a></td><td>#</td><td>#</td></tr>';
 					}
 				}
 			?>

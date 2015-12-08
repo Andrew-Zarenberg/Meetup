@@ -25,7 +25,7 @@
 					}
 				}
 			
-				$actions = '<div class="actions"><a href="group.php?id='.$group_id.'">Back to Group: '.$group_name.'</a></div>';
+				$actions = '<div class="actions"><a href="group.php?id='.$group_id.'">Back to Group: '.htmlentities($group_name).'</a></div>';
 			?>
 
 <html>
@@ -50,7 +50,7 @@
 				
 				<tr>
 					<th>Group Name</th>
-					<td><?php echo $group_name; ?></td>
+					<td><?php echo htmlentities($group_name); ?></td>
 				</tr>
 				
 				<tr>

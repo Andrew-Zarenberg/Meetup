@@ -49,7 +49,7 @@
 					
 					$groups = $stmt;
 					while($groups->fetch()){
-						echo '<tr><td class="group_info"><div class="group_name"><a href="group.php?id='.$group_id.'">'.$group_name.'</a></div><div class="group_description">'.$group_description.'</div></td>';
+						echo '<tr><td class="group_info"><div class="group_name"><a href="group.php?id='.$group_id.'">'.htmlentities($group_name).'</a></div><div class="group_description">'.htmlentities($group_description).'</div></td>';
 						//echo '<td class="group_interest"><a href="interest.php?interest='.$group_interest.'">'.$group_interest.'</a></td>';
 						
 						echo '<td class="group_interest">';
@@ -58,14 +58,14 @@
 							$stmt->execute();
 							$stmt->bind_result($interest_name);
 							while($stmt->fetch()){
-								echo '<div><a href="interest.php?name='.$interest_name.'">'.$interest_name.'</a></div>';
+								echo '<div><a href="interest.php?name='.htmlentities($interest_name).'">'.htmlentities($interest_name).'</a></div>';
 							}
 							$stmt->close();
 						} else echo 'fail';
 						echo '</td>';
 						
 						echo '<td class="group_members num">'.$num_members.'</td>';
-						echo '<td class="group_creator"><a href="user.php?username='.$group_creator.'">'.$group_creator.'</a></td></tr>';
+						echo '<td class="group_creator"><a href="user.php?username='.htmlentities($group_creator).'">'.htmlentities($group_creator).'</a></td></tr>';
 					}
 					$groups->close();
 				}

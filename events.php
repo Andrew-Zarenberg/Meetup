@@ -38,9 +38,9 @@
 						if(time() > (new Datetime($event_start_time))->getTimestamp()) continue;
 						
 						echo '<tr><td class="group_info"><div class="group_name"><a href="event.php?id='.$event_id.'">'.$event_title.'</a></div><div class="group_description">'.$event_description.'</div></td>';
-						echo '<td><a href="group.php?id='.$group_id.'">'.$group_name.'</a></td>';
+						echo '<td><a href="group.php?id='.$group_id.'">'.htmlentities($group_name).'</a></td>';
 						echo '<td>'.(new Datetime($event_start_time))->format($EVENT_DATE_FORMAT).'<br />'.(new Datetime($event_end_time))->format($EVENT_DATE_FORMAT).'</td>';
-						echo '<td><div><a href="location.php?name='.$location_name.'&zipcode='.$location_zipcode.'">'.$location_name.'</a></div><div>'.$location_street.' '.$location_zipcode.', '.$location_city.'</div></td>';
+						echo '<td><div><a href="location.php?name='.htmlentities($location_name).'&zipcode='.$location_zipcode.'">'.htmlentities($location_name).'</a></div><div>'.htmlentities($location_street).' '.$location_zipcode.', '.htmlentities($location_city).'</div></td>';
 						echo '<td class="num">'.$num_rsvp.'</td>';
 						echo '</tr>';
 					}

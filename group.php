@@ -241,13 +241,13 @@
 								
 									$creator_actions .= '<a href="group.php?id='.$group_id.'&action=delete" class="bad">Delete Group</a>';
 									
-									$creator_actions .= '<br /><br /><form action="group.php?id='.$group_id.'&action=auth" method="post">Authorized Group Member: <select name="user"><option value="'.$username.'">Select a Member...</option>';
+									$creator_actions .= '<br /><br /><form action="group.php?id='.$group_id.'&action=auth" method="post">Authorized Group Member: <select name="user"><option value="'.htmlentities($username).'">Select a Member...</option>';
 									if($stmt = $mysqli->prepare("SELECT username FROM groupuser WHERE group_id=? AND authorized=0 ORDER BY username")){
 										$stmt->bind_param("i",$group_id);
 										$stmt->execute();
 										$stmt->bind_result($user);
 										while($stmt->fetch()){
-											$creator_actions .= '<option value="'.$user.'">'.$user.'</option>';
+											$creator_actions .= '<option value="'.htmlentities($user).'">'.htmlentities($user).'</option>';
 										}
 										$stmt->close();
 									}
@@ -256,13 +256,13 @@
 									
 									
 									// UNAUTHORIZE
-									$creator_actions .= '<form action="group.php?id='.$group_id.'&action=unauth" method="post">Un-authorize Group Member: <select name="user"><option value="'.$username.'">Select a Member...</option>';
+									$creator_actions .= '<form action="group.php?id='.$group_id.'&action=unauth" method="post">Un-authorize Group Member: <select name="user"><option value="'.htmlentities($username).'">Select a Member...</option>';
 									if($stmt = $mysqli->prepare("SELECT username FROM groupuser WHERE group_id=? AND authorized=1 AND username!=? ORDER BY username")){
 										$stmt->bind_param("is",$group_id,$username);
 										$stmt->execute();
 										$stmt->bind_result($user);
 										while($stmt->fetch()){
-											$creator_actions .= '<option value="'.$user.'">'.$user.'</option>';
+											$creator_actions .= '<option value="'.htmlentities($user).'">'.htmlentities($user).'</option>';
 										}
 										$stmt->close();
 									}
@@ -321,7 +321,7 @@
 				<tr>
 					<td style="width:50%;">
 						<strong>Group Description:</strong><br />
-						<?php echo nl2br($group_description); ?>
+						<?php echo nl2br(htmlentities($group_description)); ?>
 					</td>
 					
 					<td style="width:50%" rowspan="2">
@@ -337,7 +337,7 @@
 								while($stmt->fetch()){
 									if($authorized) echo '<div class="authorized"><span>[Authorized]</span> ';
 									else echo '<div>';
-									echo '<a href="user.php?username='.$user.'">'.$user.'</a></div>';
+									echo '<a href="user.php?username='.htmlentities($user).'">'.htmlentities($user).'</a></div>';
 								}
 								$stmt->close();
 							}
@@ -351,7 +351,7 @@
 								$stmt->execute();
 								$stmt->bind_result($interest_name);
 								while($stmt->fetch()){
-									echo '<a href="interest.php?name='.$interest_name.'">'.$interest_name.'</a> &nbsp; &nbsp; &nbsp; ';
+									echo '<a href="interest.php?name='.htmlentities($interest_name).'">'.htmlentities($interest_name).'</a> &nbsp; &nbsp; &nbsp; ';
 								}
 								$stmt->close();
 							}
@@ -381,8 +381,8 @@
 						}
 						
 						while($stmt->fetch()){
-							echo '<tr><th class="username">'.$a_username.'</th>';
-							echo '<td rowspan="2"><div style="font-size:25px;">'.$a_title.'</div><div>Posted on: <strong>'.(new Datetime($a_date))->format($EVENT_DATE_FORMAT).'</strong></div><br />'.nl2br($a_content).'</td>';
+							echo '<tr><th class="username">'.htmlentities($a_username).'</th>';
+							echo '<td rowspan="2"><div style="font-size:25px;">'.htmlentities($a_title).'</div><div>Posted on: <strong>'.(new Datetime($a_date))->format($EVENT_DATE_FORMAT).'</strong></div><br />'.nl2br(htmlentities($a_content)).'</td>';
 							echo '<tr><td class="actions" style="text-align:center;">';
 							
 							// ONLY group creator AND announcement creator have ability to delete
@@ -426,10 +426,10 @@
 							// Because time, have to do check with PHP and not in SQL
 							if(time() > (new Datetime($event_start))->getTimestamp()) continue;
 						
-							echo '<tr><td><div><a href="event.php?id='.$event_id.'">'.$event_title.'</a></div>'.$event_description.'</td>';
+							echo '<tr><td><div><a href="event.php?id='.$event_id.'">'.htmlentities($event_title).'</a></div>'.nl2br(htmlentities($event_description)).'</td>';
 							echo '<td>'.(new Datetime($event_start))->format($EVENT_DATE_FORMAT).'</td>';
 							echo '<td>'.(new Datetime($event_end))->format($EVENT_DATE_FORMAT).'</td>';
-							echo '<td><div><a href="location.php?name='.$location_name.'&zipcode='.$location_zipcode.'">'.$location_name.'</a></div><div>'.$location_street.' '.$location_zipcode.', '.$location_city.'</div></td></tr>';
+								echo '<td><div><a href="location.php?name='.htmlentities($location_name).'&zipcode='.$location_zipcode.'">'.htmlentities($location_name).'</a></div><div>'.htmlentities($location_street).' '.$location_zipcode.', '.htmlentities($location_city).'</div></td></tr>';
 						}
 					}
 				?>

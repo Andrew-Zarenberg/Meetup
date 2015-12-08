@@ -17,7 +17,7 @@
 <html>
 	<head>
 	
-		<title><?php echo $interest_name; ?></title>
+		<title><?php echo htmlentities($interest_name); ?></title>
 		<?php include("header.php"); ?>
 		
 	</head>
@@ -52,7 +52,7 @@
 					
 					$groups = $stmt;
 					while($groups->fetch()){
-						echo '<tr><td class="group_info"><div class="group_name"><a href="group.php?id='.$group_id.'">'.$group_name.'</a></div><div class="group_description">'.$group_description.'</div></td>';
+						echo '<tr><td class="group_info"><div class="group_name"><a href="group.php?id='.$group_id.'">'.htmlentities($group_name).'</a></div><div class="group_description">'.htmlentities($group_description).'</div></td>';
 						//echo '<td class="group_interest"><a href="interest.php?interest='.$group_interest.'">'.$group_interest.'</a></td>';
 						
 						echo '<td class="group_interest">';
@@ -63,14 +63,14 @@
 							while($stmt->fetch()){
 								echo '<div';
 								if($interest_name == $i_name) echo ' style="font-weight:bold; font-style:italic;"';
-								echo '><a href="interest.php?name='.$i_name.'">'.$i_name.'</a></div>';
+								echo '><a href="interest.php?name='.htmlentities($i_name).'">'.htmlentities($i_name).'</a></div>';
 							}
 							$stmt->close();
 						} else echo 'fail';
 						echo '</td>';
 						
 						echo '<td class="group_members num">'.$num_members.'</td>';
-						echo '<td class="group_creator"><a href="user.php?username='.$group_creator.'">'.$group_creator.'</a></td></tr>';
+						echo '<td class="group_creator"><a href="user.php?username='.htmlentities($group_creator).'">'.htmlentities($group_creator).'</a></td></tr>';
 					}
 					$groups->close();
 				}

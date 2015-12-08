@@ -59,7 +59,7 @@
 								$stmt->execute();
 								$stmt->bind_result($group_id, $group_name, $num_members);
 								while($stmt->fetch()){
-									echo '<div><a href="group.php?id='.$group_id.'">'.$group_name.'</a> - <strong>'.$num_members.'</strong> members</div>';
+									echo '<div><a href="group.php?id='.$group_id.'">'.htmlentities($group_name).'</a> - <strong>'.$num_members.'</strong> members</div>';
 								}
 							}
 						?>
@@ -74,7 +74,7 @@
 								$stmt->execute();
 								$stmt->bind_result($group_id, $group_name, $num_members);
 								while($stmt->fetch()){
-									echo '<div><a href="group.php?id='.$group_id.'">'.$group_name.'</a> - <strong>'.$num_members.'</strong> members</div>';
+									echo '<div><a href="group.php?id='.$group_id.'">'.htmlentities($group_name).'</a> - <strong>'.$num_members.'</strong> members</div>';
 								}
 							}
 						?>
@@ -90,7 +90,7 @@
 								$stmt->execute();
 								$stmt->bind_result($group_id, $group_name, $num_members);
 								while($stmt->fetch()){
-									echo '<div><a href="group.php?id='.$group_id.'">'.$group_name.'</a> - <strong>'.$num_members.'</strong> members</div>';
+									echo '<div><a href="group.php?id='.$group_id.'">'.htmlentities($group_name).'</a> - <strong>'.$num_members.'</strong> members</div>';
 								}
 							}
 						?>
@@ -129,9 +129,9 @@
 									if(time() > $ts || time()+60*60*24*3 < $ts) continue;
 									
 									echo '<tr><td class="group_info"><div class="group_name"><a href="event.php?id='.$event_id.'">'.$event_title.'</a></div><div class="group_description">'.$event_description.'</div></td>';
-									echo '<td><a href="group.php?id='.$group_id.'">'.$group_name.'</a></td>';
+									echo '<td><a href="group.php?id='.$group_id.'">'.htmlentities($group_name).'</a></td>';
 									echo '<td>'.(new Datetime($event_start_time))->format($EVENT_DATE_FORMAT).'<br />'.(new Datetime($event_end_time))->format($EVENT_DATE_FORMAT).'</td>';
-									echo '<td><div><a href="location.php?name='.$location_name.'&zipcode='.$location_zipcode.'">'.$location_name.'</a></div><div>'.$location_street.' '.$location_zipcode.', '.$location_city.'</div></td>';
+									echo '<td><div><a href="location.php?name='.$location_name.'&zipcode='.$location_zipcode.'">'.htmlentities($location_name).'</a></div><div>'.htmlentities($location_street).' '.$location_zipcode.', '.htmlentities($location_city).'</div></td>';
 									echo '<td class="num">'.$num_rsvp.'</td>';
 									echo '</tr>';
 								}
@@ -165,7 +165,7 @@
 							echo '<tr><th colspan="4"><a href="groups.php">Browse All Groups</a></th></tr><tr><th>Name</th><th>Interest</th><th>Members</th><th>Creator</th></tr>';
 							
 							while($groups->fetch()){
-								echo '<tr><td class="group_info"><div class="group_name"><a href="group.php?id='.$group_id.'">'.$group_name.'</a></div><div class="group_description">'.$group_description.'</div></td>';
+								echo '<tr><td class="group_info"><div class="group_name"><a href="group.php?id='.$group_id.'">'.htmlentities($group_name).'</a></div><div class="group_description">'.htmlentities($group_description).'</div></td>';
 								
 								echo '<td class="group_interest">';
 								if($stmt = $mysqli->prepare("SELECT interest_name FROM groupinterest WHERE group_id=? ORDER BY interest_name")){
@@ -173,14 +173,14 @@
 									$stmt->execute();
 									$stmt->bind_result($interest_name);
 									while($stmt->fetch()){
-										echo '<div><a href="interest.php?name='.$interest_name.'">'.$interest_name.'</a></div>';
+										echo '<div><a href="interest.php?name='.$interest_name.'">'.htmlentities($interest_name).'</a></div>';
 									}
 									$stmt->close();
 								} else echo 'fail';
 								echo '</td>';
 								
 								echo '<td class="group_members num">'.$num_members.'</td>';
-								echo '<td class="group_creator"><a href="user.php?username='.$group_creator.'">'.$group_creator.'</a></td></tr>';
+								echo '<td class="group_creator"><a href="user.php?username='.$group_creator.'">'.htmlentities($group_creator).'</a></td></tr>';
 							}
 						}
 						$groups->close();
