@@ -19,12 +19,23 @@
 		<?php print_errors($error, $success); ?>	
 		<?php echo $actions; ?>
 		
+		
+		<table cellspacing="0">
+			<tr><th class="table_header">README</th></tr>
+			<tr><td>
+			
+				<a href="README.html" target="_blank">README</a> -  Contains list of all files.<br /><br />
+				<a href="USE_CASES.html" target="_blank">USE CASES</a> - Contains information and SQL queries for use cases
+			</td></tr>
+		</table>
+		<!--
 		<table cellspacing="0">
 			<tr><th class="table_header">Table of Contents</th></tr>
 			<tr><td>
 				<strong>Table of Contents</strong><br />
 				<a href="#tabAbout">About</a><br />
-				<a href="#tabOverview">Overview</a><br />
+				<a href="#tabOverview">Installation/Overview</a><br />
+				<a href="#tabFeatures">Extra Features</a><br />
 				<br /><strong>List of Files:</strong><br />
 				1. <a href="#tab_body_footer">body_footer.php</a><br />
 				2. <a href="#tab_body_header">body_header.php</a><br />
@@ -46,15 +57,6 @@
 				18. <a href="#tab_register">register.php</a> (Register New Account)<br />
 				19. <a href="#tab_search">search.php</a> (Search Results Page)<br />
 				
-				<!--
-				<a href="#tabIndex">3. Index Page</a> (index.php)<br />
-				<a href="#tabListOfGroups">4. List of Groups</a> (groups.php)<br />
-				<a href="#tabListOfEvents">5. List of Events</a> (events.php)<br />
-				<a href="#tabListOfInterests">6. List of Interests</a> (interests.php)<br />
-				<a href="#tabGroupPage">7. Group Page</a> (group.php)<br />
-				<a href="#tabEventPage">8. Event Page</a> (event.php)<br />
-				<a href="#tabInterestPage">9. Interest Page</a> (interest.php)
-				-->
 			</td></tr>
 		</table><br />
 		
@@ -69,11 +71,35 @@
 		<table cellspacing="0">
 			<tr><th class="table_header" id="tabOverview">Overview</th></tr>
 			<tr><td>
-				<strong>Starting</strong><br />
+				<strong>Installation</strong>
+				Import the <strong>meetup.sql</strong> file into SQL.  This contains the exact same table definitions as provided in <strong>Project_Table_Defs_Fall_2015.sql</strong> with one additional table: groupannouncement.  (Info on this table in <a href="#tabFeatures">Extra Features</a>).
+				<br /><br />
+				<strong>Basic use</strong><br />
 				The first time the user views the application, they will be shown the <a href="#tab2">Index Page</a> which contains a brief description about Meetup and provides a link to Register Page.  After registering an account the user will be automatically logged in and redirected back to the index page.<br /><br />
 				Next, the user may browse groups and events through the <a href="#tabListOfGroups">List of Groups</a> and <a href="#tabListOfEvents">List of Events</a> pages.  The user may also use the search bar.<br /><br />
 				Upon viewing a group the user would like to join, the user may click the Join Group button.  Alternatively, if the user sees an event they would like to go to, they can click a link to join the group and RSVP to the event simultaneously.
 			</tr></td>
+		</table><br />
+		
+		<table cellspacing="0">
+			<tr><th class="table_header" id="tabFeatures">Extra Features</th></tr>
+			<tr><td>
+				<strong>1. Search</strong><br />
+				At the top of every page is a search box, where anyone may enter a query.  Submitting the form will take the user to the <a href="#tab_search">Search Results Page</a> which will list search results for groups and events.  From there the user may click on the links to view groups and events from the results.				
+				<br /><br />
+				
+				<strong>2. Group Announcements</strong><br />
+				On each group page is a table containing posted announcements.  Only authorized users may post announcements.  To post an announcement, an authorized user can click on the <em>Add Announcement</em> link on the top of the group page.  This will take them to the Add Announcement page, where they can write an announcement and optionally add a title for the announcement.  After posting an announcement, users may delete only their own announcements, however the group creator has the ability to delete any announcement.
+				<br /><br />
+				
+				<strong>3. Check Out These Groups!</strong><br />
+				For logged in users, the top of the index page contains 3 boxes for groups that they can check out.  The first box is <em>Top 3 Groups</em>, which displays the three groups with the most members.  The next box is the <em>Bottom 3 Groups</em>, which displays the three groups with the least amount of members.  The last box is the <em>Random 3 Groups</em>, which displays 3 random groups <u>that the user is not a member of</u>.  The query for getting 3 random groups that the user is not in is shown below.
+				<hr />
+				<code>
+				<strong>Random 3 Groups</strong> (<em>? = username</em>) <br />
+				SELECT g.group_id, g.group_name, (SELECT count(*) FROM groupuser WHERE groupuser.group_id=g.group_id) num_members FROM `group` g WHERE ? NOT IN (SELECT username FROM groupuser WHERE groupuser.group_id=g.group_id) ORDER BY RAND() DESC LIMIT 3
+				</code>
+			</td></tr>
 		</table><br />
 		
 		<table cellspacing="0">
@@ -258,7 +284,7 @@
 				</code>
 			</tr></td>
 		</table><br />
-		
+		-->
 		<?php echo $actions; ?>
 		<?php include("body_footer.php"); ?>
 	</body>
