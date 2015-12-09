@@ -326,8 +326,9 @@
 					
 					<td style="width:50%" rowspan="2">
 						<?php
-							echo '<div class="authorized"><strong>Group Creator:</strong> ';
-							echo '<a href="user.php?username='.$group_creator.'">'.$group_creator.'</a>';
+							echo '<div><strong>Group Creator:</strong> ';
+							//echo '<a href="user.php?username='.$group_creator.'">'.$group_creator.'</a>';
+							echo '<span class="member">'.htmlentities($group_creator).'</span>';
 							echo '</div><br /><strong>Group Members: ('.$num_members.')</strong><br />';
 						
 							if($stmt = $mysqli->prepare("SELECT username, authorized FROM groupuser WHERE group_id=? ORDER BY authorized DESC, username")){
@@ -335,9 +336,10 @@
 								$stmt->execute();
 								$stmt->bind_result($user, $authorized);
 								while($stmt->fetch()){
-									if($authorized) echo '<div class="authorized"><span>[Authorized]</span> ';
+									if($authorized) echo '<div class="authorized"><span class="auth">[Authorized]</span> ';
 									else echo '<div>';
-									echo '<a href="user.php?username='.htmlentities($user).'">'.htmlentities($user).'</a></div>';
+									//echo '<a href="user.php?username='.htmlentities($user).'">'.htmlentities($user).'</a></div>';
+									echo '<span class="member">'.htmlentities($user).'</span>';
 								}
 								$stmt->close();
 							}

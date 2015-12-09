@@ -7,7 +7,7 @@
 <html>
 	<head>
 	
-		<title><?php echo $search; ?></title>
+		<title><?php echo htmlentities($search); ?></title>
 		<?php include("header.php"); ?>
 		
 	</head>
@@ -57,7 +57,7 @@
 							echo ' ';
 						}
 						
-						echo '</td><td class="group_info"><div class="group_name"><a href="group.php?id='.$group_id.'">'.$group_name.'</a></div><div class="group_description">'.$group_description.'</div></td>';
+						echo '</td><td class="group_info"><div class="group_name"><a href="group.php?id='.$group_id.'">'.htmlentities($group_name).'</a></div><div class="group_description">'.htmlentities($group_description).'</div></td>';
 						//echo '<td class="group_interest"><a href="interest.php?interest='.$group_interest.'">'.$group_interest.'</a></td>';
 						
 						echo '<td class="group_interest">';
@@ -66,14 +66,15 @@
 							$stmt->execute();
 							$stmt->bind_result($interest_name);
 							while($stmt->fetch()){
-								echo '<div><a href="interest.php?name='.$interest_name.'">'.$interest_name.'</a></div>';
+								echo '<div><a href="interest.php?name='.htmlentities($interest_name).'">'.htmlentities($interest_name).'</a></div>';
 							}
 							$stmt->close();
 						} else echo 'fail';
 						echo '</td>';
 						
 						echo '<td class="group_members num">'.$num_members.'</td>';
-						echo '<td class="group_creator"><a href="user.php?username='.$group_creator.'">'.$group_creator.'</a></td></tr>';
+						//echo '<td class="group_creator"><a href="user.php?username='.$group_creator.'">'.$group_creator.'</a></td></tr>';
+						echo '<td class="group_creator"><span class="member">'.htmlentities($group_creator).'</span></td></tr>';
 					}
 					$groups->close();
 				}
@@ -120,7 +121,7 @@
 							echo ' ';
 						}
 						
-						echo '</td><td class="group_info"><div class="group_name"><a href="event.php?id='.$event_id.'">'.$event_title.'</a></div><div class="group_description">'.$event_description.'</div></td>';
+						echo '</td><td class="group_info"><div class="group_name"><a href="event.php?id='.$event_id.'">'.htmlentities($event_title).'</a></div><div class="group_description">'.nl2br(htmlentities($event_description)).'</div></td>';
 						echo '<td><a href="group.php?id='.$group_id.'">'.htmlentities($group_name).'</a></td>';
 						echo '<td>'.(new Datetime($event_start_time))->format($EVENT_DATE_FORMAT).'<br />'.(new Datetime($event_end_time))->format($EVENT_DATE_FORMAT).'</td>';
 						echo '<td><div><a href="location.php?name='.htmlentities($location_name).'&zipcode='.$location_zipcode.'">'.htmlentities($location_name).'</a></div><div>'.htmlentities($location_street).' '.$location_zipcode.', '.htmlentities($location_city).'</div></td>';

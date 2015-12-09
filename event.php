@@ -191,10 +191,11 @@
 							if($stmt = $mysqli->prepare("SELECT username FROM eventuser WHERE event_id=? AND rsvp=1")){
 								$stmt->bind_param("i",$event_id);
 								$stmt->execute();
-								$stmt->bind_result($username);
+								$stmt->bind_result($user);
 								
 								while($stmt->fetch()){
-									echo '<div><a href="user.php?username='.$username.'">'.$username.'</a></div>';
+									//echo '<div><a href="user.php?username='.$username.'">'.$username.'</a></div>';
+									echo '<div><span class="member">'.htmlentities($user).'</span></div>';
 								}
 								$stmt->close();
 							}

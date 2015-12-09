@@ -35,7 +35,7 @@
 		<a href="interests.php">List of Interests</a> | 
 		
 		<?php if(isset($username)){ ?>
-			<a href="user.php">My Profile</a> | 
+			<!--<a href="user.php">My Profile</a> | -->
 			<a href="logout.php">Log Out</a>
 		<?php } else { ?>
 			<a href="register.php">Register</a> | 

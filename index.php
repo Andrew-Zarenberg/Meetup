@@ -180,7 +180,8 @@
 								echo '</td>';
 								
 								echo '<td class="group_members num">'.$num_members.'</td>';
-								echo '<td class="group_creator"><a href="user.php?username='.$group_creator.'">'.htmlentities($group_creator).'</a></td></tr>';
+								//echo '<td class="group_creator"><a href="user.php?username='.$group_creator.'">'.htmlentities($group_creator).'</a></td></tr>';
+								echo '<td class="group_creator"><span class="member">'.htmlentities($group_creator).'</span></td></tr>';
 							}
 						}
 						$groups->close();

@@ -121,7 +121,7 @@ table.separation, table.separation td, table.separation.th {
 	vertical-align:top;
 }
 
-div.authorized span {
+span.auth
 	font-style:italic;
 }
 
@@ -208,6 +208,10 @@ table.noborder {
 
 table.noborder td, table.noborder th {
 	border:0;
+}
+
+span.member {
+	font-weight:bold;
 }
 </style>
 
